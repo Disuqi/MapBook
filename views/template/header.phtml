@@ -1,0 +1,34 @@
+<?php require_once("head.phtml") ?>
+<body role="document">
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand">
+            <img src="../../images/wavingHand.png" alt="icon" width="30" height="30" class="d-inline-block align-text-top">Assignment</a>
+        <form class="">
+            <input class="form-control" id="searchBox" type="search" placeholder="Search" aria-label="Search">
+        </form>
+        <?php
+            if($_SESSION['loggedIn'] == true){
+                var_dump($_SESSION);
+                echo '
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Dropdown button</button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <li><a class="dropdown-item" href="#">Action</a></li>
+                          <li><a class="dropdown-item" href="#">Another action</a></li>
+                          <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </div>
+                ';
+            } else{
+                var_dump($_SESSION);
+                echo '
+                    <a href="../../controllers/signIn.php">
+                        <button class="btn signInBtn" type="button">Sign in</button>
+                    </a>
+                ';
+            }
+        ?>
+    </div>
+</nav>
+</body>

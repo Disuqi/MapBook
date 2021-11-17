@@ -1,0 +1,9 @@
+<?php require('template/header.phtml');
+require_once('../models/UsersRepo.php');
+$repo = new UsersRepo();
+$users = $repo->getAllUsers();
+foreach($users as $user){
+    echo "@". $user->getFirstName();
+}?>
+
+<?php require('template/footer.phtml') ?>

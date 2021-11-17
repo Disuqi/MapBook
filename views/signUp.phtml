@@ -1,0 +1,45 @@
+<?php require('template/head.phtml') ?>
+<div class="signUpContainer d-flex align-items-center justify-content-center">
+    <div class="signingForm signUp">
+        <form enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
+            <div class="cl-12 text-center mt-3">
+                <h2>Assignmet</h2>
+            </div>
+            <div class="mx-5">
+                <div class="mb-3 mt-4 col-12 text-center">
+                    <label class="uploadProfilePic" for="profilePic"></label>
+                    <input type="file" name="profilePic" class="fileUpload" id="profilePic" accept="image/png, image/jpeg">
+                    <div>
+                        <label for="profilePic">Upload Profile Picture</label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-0">
+                    <span class="input-group-text" id="basic-addon1">@</span>
+                    <input type="text" name="username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+                <div class="mb-2">
+                    <input type="text" name="email" class="form-control" placeholder="Email address">
+                </div>
+                <div class="mb-2">
+                    <input type="text" name="firstName" class="form-control" placeholder="First Name">
+                    <input type="text" name="lastName" class="form-control" placeholder="Last Name">
+                </div>
+                <div class="mb-3">
+                    <input type="password" name="password" class="form-control" placeholder="Password">
+                    <input type="password" name="password2" class="form-control" placeholder="Confirm Password">
+                </div>
+                <div class="mb-3">
+                    <button type="submit" name="submit" class="btn form-control signUpBtn">Sign Up</button>
+                </div>
+                <div>
+                    <p>Already have an account? <a href="../controllers/signIn.php" class="link-info">Sign in</a></p>
+                </div>
+                <div class="col-12 text-center">
+                    <a href="../controllers/index.php"><button type="button" class="btn backButton"></button></a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<?php require('template/footer.phtml')?>
