@@ -5,10 +5,20 @@
             <div class="cl-12 text-center mt-3">
                 <h2>Assignmet</h2>
             </div>
+            <div class='m-0 col-12 text-center'>
+                <p style="color: red">
+                    <?php if($view->validation != null){
+                        echo "$view->validation";
+                    }else{
+                        echo "<br>";
+                    }
+                    ?>
+                </p>
+            </div>
             <div class="mx-5">
-                <div class="mb-3 mt-4 col-12 text-center">
+                <div class="mb-3 col-12 text-center">
                     <label class="uploadProfilePic" for="profilePic"></label>
-                    <input type="file" name="profilePic" class="fileUpload" id="profilePic" accept="image/png, image/jpeg">
+                    <input type="file" name="profileImage" class="fileUpload" id="profilePic" accept="image/png, image/jpeg">
                     <div>
                         <label for="profilePic">Upload Profile Picture</label>
                     </div>

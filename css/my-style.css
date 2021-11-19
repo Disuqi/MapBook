@@ -1,3 +1,6 @@
+.navbar{
+    height: 70px;
+}
 #searchBox{
     text-align: center;
 }
@@ -72,4 +75,10 @@ body{
 
 .uploadProfilePic:hover{
     filter: brightness(90%);
+}
+
+#account{
+    height: 50px;
+    width: 50px;
+    border-radius: 100%;
 }

@@ -22,9 +22,6 @@ class UsersRepo
     }
 
     public function signIn($username, $password){
-        if($username == ''){
-            return null;
-        }
         $sqlQuery = "SELECT * FROM users WHERE username= ?";
         $array = [$username];
 
@@ -48,6 +45,18 @@ class UsersRepo
         $array = [$username];
         return $this->executeQuery($sqlQuery, $array);
     }
+    public function usernameExists($username){
+        $sqlQuery = "SELECT * FROM users WHERE username= ?";
+        $array = [$username];
+        return sizeof($this->executeQuery($sqlQuery, $array)) > 0;
+    }
+
+    public function emailExists($email){
+        $sqlQuery = "SELECT * FROM users WHERE email= ?";
+        $array = [$email];
+        return sizeof($this->executeQuery($sqlQuery, $array)) > 0;
+    }
+
     public function executeQuery($sqlQuery, $array = null){
         //preparing the PDO statement
         $statement = $this->dbHandle->prepare($sqlQuery);

@@ -1,4 +1,7 @@
 <?php
+if(session_id() == ''){
+    session_start();
+}
 $view = new stdClass();
 $view->pageTitle = "Sign in";
 $view->validation = null;

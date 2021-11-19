@@ -6,10 +6,12 @@
                 <h2>Assignmet</h2>
             </div>
             <div class="mx-5">
-                <div class='mt-4 col-12 text-center'>
+                <div class="col-12 text-center">
                     <p style="color: red">
                     <?php if($view->validation != null){
                         echo "$view->validation";
+                    }else{
+                        echo "<br>";
                     }
                     ?>
                     </p>
