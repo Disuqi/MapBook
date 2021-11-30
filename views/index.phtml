@@ -2,9 +2,10 @@
 require_once('../models/UsersRepo.php');
 $repo = new UsersRepo();
 $users = $repo->getAllUsers();
-var_dump($_SESSION['profileImage']);
-var_dump($_SESSION['username']);
+echo "<p style='font-size: 25px; text-align: center; margin-inline: 100px; margin-top: 20px; font-family: Roboto Medium'>Welcome to my website!</p>";
+echo "<p style='font-size: 20px; text-align: center; margin-inline: 100px'>This is website is not complete, however, I am working on it and it will be ready soon!<br> I do not regularly upload the files to the server, therefore, this is not up to date...<br>Once complete it should be a website very similar to facebook or instagram<br><br>Please do not hesitate to contact me for the source code or anything else!<br>My email is <a href='mailto:disuqi.hijazi.7@gmail.com'>disuqi.hijazi.7@gmail.com</a>, my phone number is +44 7424114244</p>";
+echo "<h5>Registered Users</h5>";
 foreach($users as $user){
-    echo "@". $user->getFirstName();
+    echo "@". $user->getFirstName() . '<br>';
 }?>
 <?php require('template/footer.phtml') ?>

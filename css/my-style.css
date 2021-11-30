@@ -35,7 +35,7 @@ body{
     border-radius: 5px;
 }
 .signUp{
-    height: 650px;
+    height: 700px;
     width: 400px;
 }
 .copyright{
@@ -80,5 +80,6 @@ body{
     height: 50px;
     width: 50px;
     border-radius: 100%;
-    background-image: url("../images/noProfilePic.png");
+    background-color: #f8f8f8;
+    background-size: cover;
 }

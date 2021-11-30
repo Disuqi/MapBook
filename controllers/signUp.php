@@ -40,6 +40,7 @@ if(isset($_POST['submit'])){
             $view->validation = "The passwords do not match";
             break;
         case 'OK':
+            session_start();
             $un = $_POST['username']; //un is an abbreviation for username
             $profileImage = $imageHandler->addProfileImage();
             if($_FILES['profileImage']['name'] != ""){
@@ -52,7 +53,6 @@ if(isset($_POST['submit'])){
             }else{
                 $_SESSION['profileImage'] = "../images/noProfilePic.png";
             }
-            session_start();
             $repo->signUp(new UserDTO($_POST));
             $_SESSION['loggedIn'] = true;
             $_SESSION['username'] = $un;
