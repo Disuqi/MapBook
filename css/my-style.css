@@ -68,7 +68,6 @@ body{
     border-color: lightgrey;
     border-width: 1px;
     border-radius: 100%;
-    background-image: url("../images/noProfilePic.png");
     background-size: cover;
     transition: 0.2s ease-out;
 }
@@ -81,4 +80,5 @@ body{
     height: 50px;
     width: 50px;
     border-radius: 100%;
+    background-image: url("../images/noProfilePic.png");
 }

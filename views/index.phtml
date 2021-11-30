@@ -2,8 +2,9 @@
 require_once('../models/UsersRepo.php');
 $repo = new UsersRepo();
 $users = $repo->getAllUsers();
+var_dump($_SESSION['profileImage']);
+var_dump($_SESSION['username']);
 foreach($users as $user){
     echo "@". $user->getFirstName();
 }?>
-
 <?php require('template/footer.phtml') ?>

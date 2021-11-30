@@ -11,6 +11,14 @@ if(isset($_POST['submit'])){
     switch ($repo->signIn($_POST['username'], $_POST['password'])){
         case "T":
             $_SESSION['loggedIn'] = true;
+            $un = $_POST['username']; //un is an abbreviation for username
+            $_SESSION['username'] = $un;
+            $profileImage = $repo->getProfileImage($un);
+            if($profileImage != ""){
+                $_SESSION['profileImage'] = "../images/" . $un . "/" . $profileImage;
+            }else{
+                $_SESSION['profileImage'] = "../images/noProfilePic.png";
+            }
             header("Location: http://" . $_SERVER['HTTP_HOST'] . "/controllers/index.php");
             exit;
         case "WU":

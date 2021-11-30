@@ -17,13 +17,17 @@
             </div>
             <div class="mx-5">
                 <div class="mb-3 col-12 text-center">
-                    <label class="uploadProfilePic" for="profilePic"></label>
-                    <input type="file" name="profileImage" class="fileUpload" id="profilePic" accept="image/png, image/jpeg">
+                    <label class="uploadProfilePic" style="background-image: url(<?php
+                    if(isset($_FILES['profileImage']) && isset($_FILES['tmp_name'])){
+                        echo $_FILES['tmp_name'];
+                    }else{
+                        echo "../images/noProfilePic.png";
+                    }?>)" for="profileImage"></label>
+                    <input type="file" name="profileImage" class="fileUpload" id="profileImage" accept="image/png, image/jpeg">
                     <div>
                         <label for="profilePic">Upload Profile Picture</label>
                     </div>
                 </div>
-
                 <div class="input-group mb-0">
                     <span class="input-group-text" id="basic-addon1">@</span>
                     <input type="text" name="username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">

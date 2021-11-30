@@ -40,13 +40,24 @@ if(isset($_POST['submit'])){
             $view->validation = "The passwords do not match";
             break;
         case 'OK':
-            if(isset($_FILES['profileImage']) && !$imageHandler->addProfileImage()){
-                    $view->validation = "There is something wrong with your image";
+            $un = $_POST['username']; //un is an abbreviation for username
+            $profileImage = $imageHandler->addProfileImage();
+            if($_FILES['profileImage']['name'] != ""){
+                    $_POST['profileImage'] = $un . '_' . 1 . '.png';
+                    $_SESSION['profileImage'] = "../images/" . $un . '/' . $_POST['profileImage'];
+                    if(!$profileImage) {
+                        $view->validation = "There is something wrong with your image";
+                        break;
+                    }
             }else{
-                $view->validation= "Signed up";
-                //$repo.signUp();
+                $_SESSION['profileImage'] = "../images/noProfilePic.png";
             }
-            break;
+            session_start();
+            $repo->signUp(new UserDTO($_POST));
+            $_SESSION['loggedIn'] = true;
+            $_SESSION['username'] = $un;
+            header("Location: http://" . $_SERVER['HTTP_HOST'] . "/controllers/index.php");
+            exit;
     }
 }
 require_once("../views/signUp.phtml");

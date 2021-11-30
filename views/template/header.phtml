@@ -11,10 +11,10 @@
             if($_SESSION['loggedIn'] == true){
                 echo '
                     <div class="dropdown dropstart">
-                      <button class="btn btn-secondary" type="button" id="account" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                      <button class="btn" type="button" id="account" data-bs-toggle="dropdown" aria-expanded="false" style="background-image: url(' . $_SESSION['profileImage'] . ');"></button>
                       <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="account">
                         <li><a class="dropdown-item active" href="#">Account</a></li>
-                        <li><a class="dropdown-item" href="#">example</a></li>
+                        <li><a class="dropdown-item" href="deleteAccount.php">Delete Account</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="signOut.php">Sign out</a></li>
                       </ul>
@@ -27,6 +27,7 @@
                     </a>
                 ';
             }
+
         ?>
     </div>
 </nav>
