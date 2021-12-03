@@ -15,9 +15,9 @@ if(isset($_POST['submit'])){
             $_SESSION['username'] = $un;
             $profileImage = $repo->getProfileImage($un);
             if($profileImage != ""){
-                $_SESSION['profileImage'] = "../images/" . $un . "/" . $profileImage;
+                $_SESSION['profileImage'] = "/images/" . $un . "/" . $profileImage;
             }else{
-                $_SESSION['profileImage'] = "../images/noProfilePic.png";
+                $_SESSION['profileImage'] = "/images/noProfilePic.png";
             }
             header("Location: http://" . $_SERVER['HTTP_HOST'] . "/controllers/index.php");
             exit;
@@ -33,4 +33,5 @@ if(isset($_POST['submit'])){
     }
 
 }
+require_once("cookie.php");
 require_once("../views/signIn.phtml");

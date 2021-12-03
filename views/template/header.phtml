@@ -3,10 +3,12 @@
 <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand">
-            <img src="../../images/wavingHand.png" alt="icon" width="30" height="30" class="d-inline-block align-text-top">Assignment</a>
-        <form class="">
-            <input class="form-control" id="searchBox" type="search" placeholder="Search" aria-label="Search">
-        </form>
+            <img src="/images/wavingHand.png" alt="icon" width="30" height="30" class="d-inline-block align-text-top">Assignment</a>
+        <div class="">
+            <form class="">
+                <input class="form-control" id="searchBox" type="search" placeholder="Search" aria-label="Search">
+            </form>
+        </div>
         <?php
             if($_SESSION['loggedIn'] == true){
                 echo '
@@ -21,8 +23,9 @@
                     </div>  
                 ';
             } else{
+
                 echo '
-                    <a href="../../controllers/signIn.php">
+                    <a href="/controllers/signIn.php">
                         <button class="btn signInBtn" type="button">Sign in</button>
                     </a>
                 ';

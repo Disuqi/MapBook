@@ -45,13 +45,13 @@ if(isset($_POST['submit'])){
             $profileImage = $imageHandler->addProfileImage();
             if($_FILES['profileImage']['name'] != ""){
                     $_POST['profileImage'] = $un . '_' . 1 . '.png';
-                    $_SESSION['profileImage'] = "../images/" . $un . '/' . $_POST['profileImage'];
+                    $_SESSION['profileImage'] = "/images/" . $un . '/' . $_POST['profileImage'];
                     if(!$profileImage) {
                         $view->validation = "There is something wrong with your image";
                         break;
                     }
             }else{
-                $_SESSION['profileImage'] = "../images/noProfilePic.png";
+                $_SESSION['profileImage'] = "/images/noProfilePic.png";
             }
             $repo->signUp(new UserDTO($_POST));
             $_SESSION['loggedIn'] = true;

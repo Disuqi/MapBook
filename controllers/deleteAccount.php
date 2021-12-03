@@ -6,7 +6,7 @@ $repo = new UsersRepo();
 $username = $_SESSION['username'];
 $repo->deleteImages($username);
 $repo->deleteAccount($username);
-delete_directory("../images/$username");
+delete_directory("/images/$username");
 require_once("signOut.php");
 function delete_directory($dirname) {
     if (is_dir($dirname))

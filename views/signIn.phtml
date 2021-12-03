@@ -24,8 +24,16 @@
                     <input type="password" name="password" class="form-control" placeholder="Password">
                 </div>
                 <div class="mb-3">
-                    <input type="checkbox" name="staySignedIn" class="btn-check" id="btncheck1" autocomplete="off">
-                    <label class="btn btn-outline-dark form-control" for="btncheck1">Stay signed in</label>
+                    <?php
+                    if(isset($_COOKIE['allowCookies'])){
+                        echo '<input type="checkbox" name="staySignedIn" class="btn-check" id="btncheck1" autocomplete="off">
+                              <label class="btn btn-outline-dark form-control" for="btncheck1">Stay signed in</label>';
+                    }
+                    else{
+                        require_once('template/cookie.phtml');
+                        echo '<a data-toggle="tooltip" title="Allow cookies for this feature"><label class="btn btn-outline-dark form-control" data-bs-toggle="modal" data-bs-target="#cookiesModal">Stay signed in</label></a>';
+                    }
+                    ?>
                 </div>
                 <div class="mb-3">
                     <button type="submit" name="submit" class="btn form-control signInBtn">Sign In</button>

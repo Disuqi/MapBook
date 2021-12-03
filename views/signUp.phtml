@@ -21,7 +21,7 @@
                     if(isset($_FILES['profileImage']) && isset($_FILES['tmp_name'])){
                         echo $_FILES['tmp_name'];
                     }else{
-                        echo "../images/noProfilePic.png";
+                        echo "/images/noProfilePic.png";
                     }?>)" for="profileImage"></label>
                     <input type="file" name="profileImage" class="fileUpload" id="profileImage" accept="image/png, image/jpeg">
                     <div>
@@ -47,10 +47,10 @@
                     <button type="submit" name="submit" class="btn form-control signUpBtn">Sign Up</button>
                 </div>
                 <div>
-                    <p>Already have an account? <a href="../controllers/signIn.php" class="link-info">Sign in</a></p>
+                    <p>Already have an account? <a href="/controllers/signIn.php" class="link-info">Sign in</a></p>
                 </div>
                 <div class="col-12 text-center">
-                    <a href="../controllers/index.php"><button type="button" class="btn backButton"></button></a>
+                    <a href="/controllers/index.php"><button type="button" class="btn backButton"></button></a>
                 </div>
             </div>
         </form>

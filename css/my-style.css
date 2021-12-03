@@ -83,3 +83,18 @@ body{
     background-color: #f8f8f8;
     background-size: cover;
 }
+
+#cookieBtn{
+    height: 50px;
+    width: 50px;
+    border-radius: 100%;
+    border-style: none;
+    background-image: url("/images/cookie.png");
+    background-size: cover;
+    transition: 0.2s ease-out;
+}
+
+#cookieBtn:hover{
+    height: 60px;
+    width: 60px;
+}
