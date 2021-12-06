@@ -1,12 +1,17 @@
 <?php
 class Images{
-    public function addProfileImage(){
-        $uploaddir = "../images/" . $_POST['username'] . '/';
-        mkdir($uploaddir);
-        if($_FILES['profileImage']['name'] != ""){
-            $uploadfile = $uploaddir . $_POST['username'] . '_' . 1 . '.png';
-            move_uploaded_file($_FILES['profileImage']['tmp_name'], $uploadfile);
-            if(file_exists($uploadfile)){
+
+    public function addImage($un, $id){
+        $uploadDir = "../images/" . $un . '/';
+        if(!file_exists($uploadDir)) {
+            mkdir($uploadDir);
+        }
+        $uploadedFile = $_FILES['image']['name'];
+        if($uploadedFile != ""){
+            $ext = pathinfo($uploadedFile, PATHINFO_EXTENSION);
+            $uploadFile = $uploadDir . $id . ".". $ext;
+            move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile);
+            if(file_exists($uploadFile)){
                 return true;
             }else{
                 return false;
@@ -14,13 +19,35 @@ class Images{
         }else{
             return false;
         }
-
-    }
-    public function addImage(){
-
     }
 
-    public function getProfilePic(){
+    public function deleteImage($un, $id){
+        $file = "../images/" . $un . '/' . $id;
+        unlink($file);
+        if(!file_exists($file)) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
+    public function deleteDirectory($un) {
+        $dirname = "../images" . $un;
+        if (is_dir($dirname))
+            $dir_handle = opendir($dirname);
+        if (!$dir_handle)
+            return false;
+        while($file = readdir($dir_handle)) {
+            if ($file != "." && $file != "..") {
+                if (!is_dir($dirname."/".$file))
+                    unlink($dirname."/".$file);
+                else
+                    delete_directory($dirname.'/'.$file);
+            }
+        }
+        closedir($dir_handle);
+        rmdir($dirname);
+        return true;
     }
 }

@@ -8,12 +8,12 @@
             <div class="mx-5">
                 <div class="col-12 text-center">
                     <p style="color: red">
-                    <?php if($view->validation != null){
-                        echo "$view->validation";
-                    }else{
-                        echo "<br>";
-                    }
-                    ?>
+                        <?php if($view->validation != null){
+                            echo "$view->validation";
+                        }else{
+                            echo "<br>";
+                        }
+                        ?>
                     </p>
                 </div>
                 <div class="input-group mb-2">
@@ -25,14 +25,7 @@
                 </div>
                 <div class="mb-3">
                     <?php
-                    if(isset($_COOKIE['allowCookies'])){
-                        echo '<input type="checkbox" name="staySignedIn" class="btn-check" id="btncheck1" autocomplete="off">
-                              <label class="btn btn-outline-dark form-control" for="btncheck1">Stay signed in</label>';
-                    }
-                    else{
-                        require_once('template/cookie.phtml');
-                        echo '<a data-toggle="tooltip" title="Allow cookies for this feature"><label class="btn btn-outline-dark form-control" data-bs-toggle="modal" data-bs-target="#cookiesModal">Stay signed in</label></a>';
-                    }
+                    echo $view->staySignedIn;
                     ?>
                 </div>
                 <div class="mb-3">

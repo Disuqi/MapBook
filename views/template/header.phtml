@@ -1,37 +1,18 @@
 <?php require_once("head.phtml") ?>
 <body role="document">
 <nav class="navbar navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand">
-            <img src="/images/wavingHand.png" alt="icon" width="30" height="30" class="d-inline-block align-text-top">Assignment</a>
-        <div class="">
-            <form class="">
+    <div class="d-flex col-12 flex-nowrap justify-content-between">
+        <div class="order-0 p-2 col-2">
+            <a class="navbar-brand"><img src="/images/wavingHand.png" alt="icon" width="30" height="30" class="d-inline-block align-text-top">Assignment</a>
+        </div>
+        <div class="order-1 p-2 col-2">
+            <form>
                 <input class="form-control" id="searchBox" type="search" placeholder="Search" aria-label="Search">
             </form>
         </div>
-        <?php
-            if($_SESSION['loggedIn'] == true){
-                echo '
-                    <div class="dropdown dropstart">
-                      <button class="btn" type="button" id="account" data-bs-toggle="dropdown" aria-expanded="false" style="background-image: url(' . $_SESSION['profileImage'] . ');"></button>
-                      <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="account">
-                        <li><a class="dropdown-item active" href="#">Account</a></li>
-                        <li><a class="dropdown-item" href="deleteAccount.php">Delete Account</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="signOut.php">Sign out</a></li>
-                      </ul>
-                    </div>  
-                ';
-            } else{
-
-                echo '
-                    <a href="/controllers/signIn.php">
-                        <button class="btn signInBtn" type="button">Sign in</button>
-                    </a>
-                ';
-            }
-
-        ?>
+            <?php
+                echo $view->signInBtn;
+            ?>
     </div>
 </nav>
 </body>

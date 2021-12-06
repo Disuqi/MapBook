@@ -28,12 +28,7 @@ class UserDTO{
         return $this->_password;
     }
     public function toArray(){
-        $username = $this->_username;
-        $firstName = $this->_firstName;
-        $lastName = $this->_lastName;
-        $email = $this->_email;
-        $password = $this->_password;
-        $array = [$username, $firstName, $lastName, $email, $password];
+        $array = [$this->_username, $this->_firstName, $this->_lastName, $this->_email, $this->_password];
         return $array;
     }
 }

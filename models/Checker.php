@@ -1,4 +1,5 @@
 <?php
+require_once('Repo.php');
 require_once('UsersRepo.php');
 class Checker{
 
@@ -8,14 +9,14 @@ class Checker{
         if(!preg_match("'^([A-Za-z]+[!#$%^&*_\-?]*)+$'", $dbRow['username'])){
             return "IU";//invalid username
         }
-        else if($repo->usernameExists($dbRow['username'])){
+        else if($repo->attributeExists("username", $dbRow['username'])){
                 return "EU"; //Existing Username
         }
         //checking the email
         else if(!preg_match("'^.+@.+..*$'", $dbRow['email'])){
             return "IE";//invalid email
         }
-        else if($repo->emailExists($dbRow['email'])){
+        else if($repo->attributeExists("email", $dbRow['email'])){
                 return "EE"; //Existing email
         }
         //checking the firstname &last name

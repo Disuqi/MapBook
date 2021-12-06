@@ -11,4 +11,3 @@ if(isset($_GET["cookies"])){
         unset($_SESSION["doNotAllowCookies"]);
     }
 }
-require_once("../views/template/cookie.phtml");

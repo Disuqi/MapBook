@@ -23,7 +23,7 @@ body{
     margin-top: 15vh;
 }
 .signUpContainer{
-    margin-top: 3vh;
+    margin-top: 5vh;
 }
 .signingForm{
     height: 500px;
@@ -35,7 +35,7 @@ body{
     border-radius: 5px;
 }
 .signUp{
-    height: 700px;
+    height: 650px;
     width: 400px;
 }
 .copyright{
@@ -56,32 +56,14 @@ body{
     background: url("../images/house_full.png");
     background-size: cover;
 }
-.fileUpload{
-    display: none;
-}
-.uploadProfilePic{
-    cursor: pointer;
-    width: 90px;
-    height: 90px;
-    background-color: #f8f8f8;
-    border-style: solid;
-    border-color: lightgrey;
-    border-width: 1px;
-    border-radius: 100%;
-    background-size: cover;
-    transition: 0.2s ease-out;
-}
-
-.uploadProfilePic:hover{
-    filter: brightness(90%);
-}
 
 #account{
     height: 50px;
     width: 50px;
     border-radius: 100%;
-    background-color: #f8f8f8;
+    border-style: none;
     background-size: cover;
+    background-position: center;
 }
 
 #cookieBtn{
@@ -97,4 +79,11 @@ body{
 #cookieBtn:hover{
     height: 60px;
     width: 60px;
+}
+
+.intro{
+    text-align: center;
+    margin-inline: 100px;
+    margin-top: 20px;
+    font-family: "Roboto";
 }

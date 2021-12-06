@@ -6,8 +6,6 @@ $view->pageTitle = "Sign Up";
 $view->validation = null;
 if(isset($_POST['submit'])){
     $check = new Checker();
-    $imageHandler = new Images();
-    $repo = new UsersRepo();
     switch($check->checkSingUp($_POST)){
         case "IU":
             $view->validation = "Invalid Username";
@@ -40,24 +38,10 @@ if(isset($_POST['submit'])){
             $view->validation = "The passwords do not match";
             break;
         case 'OK':
-            session_start();
-            $un = $_POST['username']; //un is an abbreviation for username
-            $profileImage = $imageHandler->addProfileImage();
-            if($_FILES['profileImage']['name'] != ""){
-                    $_POST['profileImage'] = $un . '_' . 1 . '.png';
-                    $_SESSION['profileImage'] = "/images/" . $un . '/' . $_POST['profileImage'];
-                    if(!$profileImage) {
-                        $view->validation = "There is something wrong with your image";
-                        break;
-                    }
-            }else{
-                $_SESSION['profileImage'] = "/images/noProfilePic.png";
-            }
-            $repo->signUp(new UserDTO($_POST));
-            $_SESSION['loggedIn'] = true;
-            $_SESSION['username'] = $un;
-            header("Location: http://" . $_SERVER['HTTP_HOST'] . "/controllers/index.php");
-            exit;
+            require_once("../models/Signer.php");
+            $signer = new Signer();
+            $view->validation = $signer->signUp($_POST);
+            break;
     }
 }
 require_once("../views/signUp.phtml");

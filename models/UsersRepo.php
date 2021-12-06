@@ -1,7 +1,7 @@
 <?php
 require_once("Database.php");
 require_once("UserDTO.php");
-class UsersRepo
+class UsersRepo implements Repo
 {
     protected $dbHandle, $dbInstance;
 
@@ -12,23 +12,14 @@ class UsersRepo
         $this->dbHandle = $this->dbInstance->getdbConnection();
     }
 
-    public function getAllUsers()
-    {
-        //sqlQuery that needs to be executed
-        $sqlQuery = "SELECT * FROM users";
-
-        //executing the query and getting the result
-        return $this->getUsersFromQuery($sqlQuery);
-    }
-
     public function signIn($username, $password){
         $sqlQuery = "SELECT * FROM users WHERE username= ?";
         $array = [$username];
 
-        $users =  $this->getUsersFromQuery($sqlQuery, $array);
+        $users =  $this->getObjectsFromQuery($sqlQuery, $array);
         count($users) > 0 ? $user = $users[0] : $user = null;
         if($user != null){
-            if($user->getPassword() == $password){
+            if( password_verify($password, $user->getPassword())){
                 return "T";//True
             }
             else{
@@ -40,37 +31,62 @@ class UsersRepo
         }
     }
 
-    public function signUp($user){
+    public function addObject($object){
         //adding user to user
         $sqlQuery = "INSERT INTO users(username, firstName, lastName, email, password) VALUES(?,?,?,?,?)";
-        $this->executeQuery($sqlQuery, $user->toArray());
-        //adding profile image to images
-        $sqlQuery = "INSERT INTO images(imageName, username, date, profileImage) VALUES (?,?, NOW(), 1)";
-        $username = $user->getUsername();
-        $array = [$username . "_1.png", $username];
+        $array = $object->toArray();
+        $array[4] = password_hash($array[4], PASSWORD_DEFAULT);
+        $this->executeQuery($sqlQuery,$array);
+    }
+
+    function getAll()
+    {
+        //sqlQuery that needs to be executed
+        $sqlQuery = "SELECT * FROM users";
+
+        //executing the query and getting the result
+        return $this->getObjectsFromQuery($sqlQuery);
+    }
+
+    function getObject($pk)
+    {
+        $sqlQuery = "SELECT * FROM users WHERE username= ?";
+        $array = [$pk];
+        return $this->getObjectsFromQuery($sqlQuery, $array);
+    }
+
+    function getAttribute($attribute, $pk)
+    {
+        $sqlQuery = "SELECT " . $attribute ." FROM users WHERE username= ?";
+        $array = [$pk];
+        return $this->getObjectsFromQuery($sqlQuery, $array)->fetch()[0];
+    }
+
+    function objectExists($pk)
+    {
+        $sqlQuery = "SELECT * FROM users WHERE username= ?";
+        $array = [$pk];
+        return sizeof($this->getUsersFromQuery($sqlQuery, $array)) > 0;
+    }
+
+    function attributeExists($attribute, $value)
+    {
+        $sqlQuery = "SELECT * FROM users WHERE ".$attribute."= ?";
+        $array = [$value];
+        return sizeof($this->getObjectsFromQuery($sqlQuery, $array)) > 0;
+    }
+
+    function deleteObject($pk)
+    {
+        $sqlQuery = "DELETE FROM users WHERE username = ?";
+        $array = [$pk];
         $this->executeQuery($sqlQuery, $array);
     }
 
-    public function getUser($username){
-        $sqlQuery = "SELECT * FROM users WHERE username= ?";
-        $array = [$username];
-        return $this->getUsersFromQuery($sqlQuery, $array);
-    }
-    public function usernameExists($username){
-        $sqlQuery = "SELECT * FROM users WHERE username= ?";
-        $array = [$username];
-        return sizeof($this->getUsersFromQuery($sqlQuery, $array)) > 0;
-    }
-
-    public function emailExists($email){
-        $sqlQuery = "SELECT * FROM users WHERE email= ?";
-        $array = [$email];
-        return sizeof($this->getUsersFromQuery($sqlQuery, $array)) > 0;
-    }
-
-    private function getUsersFromQuery($sqlQuery, $array = null){
+    function getObjectsFromQuery($sqlQuery, $values = null)
+    {
         //preparing the PDO statement
-        $statement = $this->executeQuery($sqlQuery, $array);
+        $statement = $this->executeQuery($sqlQuery, $values);
         //creating an empty array
         $dataset = [];
         //filling up the array with the result gotten from executing the query
@@ -81,29 +97,11 @@ class UsersRepo
         return $dataset;
     }
 
-    public function deleteAccount($username){
-        $sqlQuery = "DELETE FROM users WHERE username = ?";
-        $array = [$username];
-        $this->executeQuery($sqlQuery, $array);
-    }
-
-    //Maybe need to delete
-    public function deleteImages($username){
-        $sqlQuery = "DELETE FROM images WHERE username = ?";
-        $array = [$username];
-        $this->executeQuery($sqlQuery, $array);
-    }
-
-    public function getProfileImage($username){
-        $sqlQuery = "SELECT imageName FROM images WHERE username = ? AND profileImage = 1";
-        $array = [$username];
-        return $this->executeQuery($sqlQuery, $array)->fetch()[0];
-    }
-    private function executeQuery($sqlQuery, $array = null){
+    function executeQuery($sqlQuery, $values = null){
         //preparing the PDO statement
         $statement = $this->dbHandle->prepare($sqlQuery);
         //executing query
-        $statement->execute($array);
+        $statement->execute($values);
         return $statement;
     }
 }
