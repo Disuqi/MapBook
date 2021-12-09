@@ -6,6 +6,10 @@ $view->pageTitle = "Sign Up";
 $view->validation = null;
 if(isset($_POST['submit'])){
     $check = new Checker();
+    $_POST['firstName'] = strtolower($_POST['firstName']);
+    $_POST['firstName'] = ucfirst($_POST['firstName']);
+    $_POST['lastName'] = strtolower($_POST['lastName']);
+    $_POST['lastName'] = ucfirst($_POST['lastName']);
     switch($check->checkSingUp($_POST)){
         case "IU":
             $view->validation = "Invalid Username";
@@ -40,6 +44,8 @@ if(isset($_POST['submit'])){
         case 'OK':
             require_once("../models/Signer.php");
             $signer = new Signer();
+            $_POST['lat'] = 0.0;
+            $_POST['lng'] = 0.0;
             $view->validation = $signer->signUp($_POST);
             break;
     }

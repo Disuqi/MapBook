@@ -1,4 +1,6 @@
 <?php
+require_once('ImageDTO.php');
+require_once('Database.php');
 class ImagesRepo implements Repo{
 
     protected $dbHandle, $dbInstance;
@@ -34,9 +36,7 @@ class ImagesRepo implements Repo{
 
     function objectExists($pk)
     {
-        $sqlQuery = "SELECT * FROM images WHERE id= ? AND username = ?";
-        $array = [$pk['id'], $pk['username']];
-        return sizeof($this->getUsersFromQuery($sqlQuery, $array)) > 0;
+        return $this->getObject($pk) != null;
     }
 
     function attributeExists($attribute, $value)
@@ -96,10 +96,21 @@ class ImagesRepo implements Repo{
         $array = [$username];
         return $this->executeQuery($sqlQuery, $array)->fetch()[0];
     }
+
+    function getAllProfileImages(){
+        $sqlQuery = "SELECT * FROM images WHERE profileImage = 1";
+        return $this->getObjectsFromQuery($sqlQuery);
+    }
+
     function getProfileImage($username){
-        $sqlQuery = "SELECT id FROM images WHERE username = ? AND profileImage = 1";
+        $sqlQuery = "SELECT * FROM images WHERE username = ? AND profileImage = 1";
         $array = [$username];
-        return $this->executeQuery($sqlQuery, $array)->fetch()[0];
+        $result = $this->getObjectsFromQuery($sqlQuery, $array);
+        if($result != []) {
+            return $result[0];
+        }else{
+            return null;
+        }
     }
 
     function setProfileImage($pk){

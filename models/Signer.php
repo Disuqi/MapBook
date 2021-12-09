@@ -19,9 +19,8 @@ Class Signer{
         $_SESSION['username'] = $un;
         //getting the profile image
         $profileImage = $this->imageRepo->getProfileImage($un);
-        $ext = $this->imageRepo->getAttribute("ext", ["id" => $profileImage, "username" => $un]);
         if($profileImage != ""){
-            $_SESSION['profileImage'] = "../images/" . $un . "/" . $profileImage . "." . $ext;
+            $_SESSION['profileImage'] = $profileImage->getImagePath();
         }else{
             $_SESSION['profileImage'] = "../images/noProfilePic.svg";
         }
@@ -48,7 +47,6 @@ Class Signer{
                 $_SESSION['profileImage'] = "../images/" . $un . '/1.' . $ext;
             }
         }else{
-            return "there is no file";
             $_SESSION['profileImage'] = "../images/noProfilePic.svg";
         }
         $this->userRepo->addObject(new UserDTO($dbRow));

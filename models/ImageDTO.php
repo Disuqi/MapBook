@@ -3,14 +3,15 @@
 class ImageDTO
 {
 
-    protected $_id, $_username, $_date, $_profileImage;
+    protected $_id, $_username, $_date, $_ext, $_profileImage;
 
     public function __construct($dbRow)
     {
         //initiating all fields
-        $this->_username = $dbRow['id'];
-        $this->_id = $dbRow['username'];
+        $this->_id = $dbRow['id'];
+        $this->_username = $dbRow['username'];
         $this->_date = $dbRow['date'];
+        $this->_ext = $dbRow['ext'];
         $this->_profileImage = $dbRow['profileImage'];
     }
 
@@ -29,14 +30,21 @@ class ImageDTO
         return $this->_date;
     }
 
+    public function getExt(){
+        return $this->_ext;
+    }
+
     public function getProfileImage()
     {
         return $this->_profileImage;
     }
 
+    public function getImagePath(){
+        return "../images/$this->_username/$this->_id.$this->_ext";
+    }
+
     public function toArray()
     {
-        $array = [$this->_id, $this->_username, $this->_date, $this->_profileImage];
-        return $array;
+        return [$this->_id, $this->_username, $this->_date, $this->_profileImage];
     }
 }

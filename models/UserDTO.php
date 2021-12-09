@@ -1,7 +1,7 @@
 <?php
 class UserDTO{
 
-    protected $_username, $_firstName, $_lastName, $_email, $_password;
+    protected $_username, $_firstName, $_lastName, $_email, $_password, $_lat, $_lng;
 
     public function __construct($dbRow){
         //initiating all fields
@@ -10,7 +10,10 @@ class UserDTO{
         $this->_lastName = $dbRow['lastName'];
         $this->_email = $dbRow['email'];
         $this->_password = $dbRow['password'];
+        $this->_lat = $dbRow['lat'];
+        $this->_lng = $dbRow['lng'];
     }
+
     //getter methods
     public function getUsername(){
         return $this->_username;
@@ -27,8 +30,13 @@ class UserDTO{
     public function getPassword(){
         return $this->_password;
     }
+    public function getLat(){
+        return $this->_lat;
+    }
+    public function getLng(){
+        return $this->_lng;
+    }
     public function toArray(){
-        $array = [$this->_username, $this->_firstName, $this->_lastName, $this->_email, $this->_password];
-        return $array;
+        return [$this->_username, $this->_firstName, $this->_lastName, $this->_email, $this->_password, $this->_lat, $this->_lng];
     }
 }

@@ -33,7 +33,7 @@ class Images{
     }
 
     public function deleteDirectory($un) {
-        $dirname = "../images" . $un;
+        $dirname = "../images/" . $un;
         if (is_dir($dirname))
             $dir_handle = opendir($dirname);
         if (!$dir_handle)

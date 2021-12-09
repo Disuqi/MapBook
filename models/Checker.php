@@ -6,7 +6,7 @@ class Checker{
     public function checkSingUp($dbRow){
         $repo = new UsersRepo();
         //checking the username
-        if(!preg_match("'^([A-Za-z]+[!#$%^&*_\-?]*)+$'", $dbRow['username'])){
+        if(!preg_match("'^[A-Za-z]+([A-Za-z]*[!#$%^&*_\-?]*[0-9]*)*$'", $dbRow['username'])){
             return "IU";//invalid username
         }
         else if($repo->attributeExists("username", $dbRow['username'])){

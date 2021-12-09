@@ -42,6 +42,7 @@ body{
     position: fixed;
     font-size: 15px;
     bottom: 0;
+    right: 0;
 }
 
 .backButton{
@@ -57,13 +58,15 @@ body{
     background-size: cover;
 }
 
-#account{
+.account{
     height: 50px;
     width: 50px;
     border-radius: 100%;
     border-style: none;
     background-size: cover;
+    background-color: #f8f8f8;
     background-position: center;
+    background-repeat: no-repeat;
 }
 
 #cookieBtn{
@@ -87,3 +90,9 @@ body{
     margin-top: 20px;
     font-family: "Roboto";
 }
+
+.userCard{
+    width: 18rem;
+    margin: 10px;
+}
+

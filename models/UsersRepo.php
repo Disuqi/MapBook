@@ -12,28 +12,10 @@ class UsersRepo implements Repo
         $this->dbHandle = $this->dbInstance->getdbConnection();
     }
 
-    public function signIn($username, $password){
-        $sqlQuery = "SELECT * FROM users WHERE username= ?";
-        $array = [$username];
-
-        $users =  $this->getObjectsFromQuery($sqlQuery, $array);
-        count($users) > 0 ? $user = $users[0] : $user = null;
-        if($user != null){
-            if( password_verify($password, $user->getPassword())){
-                return "T";//True
-            }
-            else{
-                return "WP";//wrong password
-            }
-        }
-        else{
-            return "WU";//wrong username
-        }
-    }
 
     public function addObject($object){
         //adding user to user
-        $sqlQuery = "INSERT INTO users(username, firstName, lastName, email, password) VALUES(?,?,?,?,?)";
+        $sqlQuery = "INSERT INTO users(username, firstName, lastName, email, password, lat, lng) VALUES(?,?,?,?,?,?,?)";
         $array = $object->toArray();
         $array[4] = password_hash($array[4], PASSWORD_DEFAULT);
         $this->executeQuery($sqlQuery,$array);
@@ -52,7 +34,7 @@ class UsersRepo implements Repo
     {
         $sqlQuery = "SELECT * FROM users WHERE username= ?";
         $array = [$pk];
-        return $this->getObjectsFromQuery($sqlQuery, $array);
+        return $this->getObjectsFromQuery($sqlQuery, $array)[0];
     }
 
     function getAttribute($attribute, $pk)
@@ -64,9 +46,7 @@ class UsersRepo implements Repo
 
     function objectExists($pk)
     {
-        $sqlQuery = "SELECT * FROM users WHERE username= ?";
-        $array = [$pk];
-        return sizeof($this->getUsersFromQuery($sqlQuery, $array)) > 0;
+        return $this->getObject($pk) != null;
     }
 
     function attributeExists($attribute, $value)
@@ -103,5 +83,24 @@ class UsersRepo implements Repo
         //executing query
         $statement->execute($values);
         return $statement;
+    }
+
+    public function signIn($username, $password){
+        $sqlQuery = "SELECT * FROM users WHERE username= ?";
+        $array = [$username];
+
+        $users =  $this->getObjectsFromQuery($sqlQuery, $array);
+        count($users) > 0 ? $user = $users[0] : $user = null;
+        if($user != null){
+            if( password_verify($password, $user->getPassword())){
+                return "T";//True
+            }
+            else{
+                return "WP";//wrong password
+            }
+        }
+        else{
+            return "WU";//wrong username
+        }
     }
 }
