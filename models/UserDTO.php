@@ -24,6 +24,10 @@ class UserDTO{
     public function getLastName(){
         return $this->_lastName;
     }
+
+    public function getFullName(){
+        return $this->_firstName . " " . $this->_lastName;
+    }
     public function getEmail(){
         return $this->_email;
     }
@@ -35,6 +39,10 @@ class UserDTO{
     }
     public function getLng(){
         return $this->_lng;
+    }
+
+    public function getPosition(){
+        return "($this->_lat, $this->_lng)";
     }
     public function toArray(){
         return [$this->_username, $this->_firstName, $this->_lastName, $this->_email, $this->_password, $this->_lat, $this->_lng];

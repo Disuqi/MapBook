@@ -100,11 +100,11 @@ class UserLister{
     private function fullCard($usersList, $user, $loggedUn){
         $usersList .= "
                                 <h6 class='card-subtitle text-muted'>Name</h6>
-                                <p>".$user->getFirstName()." ". $user->getLastName()."</p>
+                                <p>".$user->getFullName()."</p>
                                 <h6 class='card-subtitle text-muted'>Email</h6>
                                 <p>".$user->getEmail()."</p>
                                 <h6 class='card-subtitle text-muted'>Position</h6>
-                                <p>(".$user->getLat().", ". $user->getLng() .")</p>
+                                <p>".$user->getPosition()."</p>
                                 <div class='container-fluid text-center'>
                                 ";
 

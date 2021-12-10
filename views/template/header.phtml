@@ -3,7 +3,7 @@
 <!--nav bar style="position: fixed; width: 100%; top: 0px; z-index: 1"-->
 <div class="navbar navbar-dark bg-dark" >
     <div class="d-flex col-12 flex-nowrap justify-content-between">
-        <div class="p-2 col-2">
+        <div class="p-2 col-4">
             <a class="navbar-brand" href="../../controllers/index.php"><img src="/images/wavingHand.png" alt="icon" width="30" height="30" class="d-inline-block align-text-top">Assignment</a>
             <?php
                 if(isset($_GET['search']) && $_GET['search'] != ''){
@@ -20,7 +20,7 @@
                 <button style="display: none" type="submit"></button>
             </form>
         </div>
-        <div class="p-1 col-2 text-end">
+        <div class="p-1 col-4 text-end">
             <?php
                 echo $view->signInBtn;
             ?>

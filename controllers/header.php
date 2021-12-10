@@ -1,10 +1,11 @@
 <?php
 //display the login button or account details depending on whether the user is signed in or not
 if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']){
-    require_once('../models/UserLister.php');
-    $userLister = new UserLister();
     $view->signInBtn = '
                         <div class="d-flex justify-content-end">
+                            <a href="index.php"><button class="btn friendR text-center" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                              <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg></button></a>
                             <div class="dropdown dropstart">
                               <button class="btn friendR" type="button" data-bs-toggle="dropdown" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
                                   <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
@@ -18,7 +19,7 @@ if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']){
                             <div class="dropdown dropstart">
                               <button class="btn account" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-image: url(' . $_SESSION['profileImage'] . '); margin-right: 0.5vw"></button>
                               <ul class="dropdown-menu dropdown-menu-dark text-end" style="right: calc(50px + 0.4vw)" aria-labelledby="account">
-                                <li><a class="dropdown-item active" href="#">Account</a></li>
+                                <li><a class="dropdown-item active" href="account.php">Account</a></li>
                                 <li><a class="dropdown-item" href="../../controllers/index.php?account=delete">Delete Account</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="../../controllers/index.php?account=signOut">Sign out</a></li>
