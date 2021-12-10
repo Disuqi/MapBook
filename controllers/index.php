@@ -28,7 +28,11 @@ if(isset($_GET['search'])){
             $view->usersList = $userLister->getAllUsers();
             break;
         default:
-            $view->usersList = $userLister->search($_GET['search']);
+            if(isset($_SESSION['loggedIn'])) {
+                $view->usersList = $userLister->search($_GET['search']);
+            }else{
+                $view->usersList = $userLister->anonymousSearch($_GET['search']);
+            }
             break;
 
     }
