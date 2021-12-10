@@ -93,6 +93,17 @@ body{
 
 .userCard{
     width: 18rem;
+    min-width: 200px;
     margin: 10px;
 }
+
+.friendR{
+    margin-right: 0.25rem;
+    color: white;
+}
+.friendR:hover,
+.friendR:focus{
+    color: lightgrey;
+}
+
 

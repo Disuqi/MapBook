@@ -26,9 +26,12 @@ Class Signer{
         }
     }
     public function signOut(){
-        $_SESSION['loggedIn'] = false;
+        $_SESSION['loggedIn'] = null;
+        unset($_SESSION['loggedIn']);
         $_SESSION['username'] = null;
+        unset($_SESSION['loggedIn']);
         $_SESSION['profileImage'] = null;
+        unset($_SESSION['loggedIn']);
         if(isset($_COOKIE['username'])){
             setcookie('username', null, -1, '/');
             unset($_COOKIE['username']);

@@ -118,4 +118,12 @@ class FriendshipRepo implements Repo{
         $result = $this->getObjectsFromQuery($sqlQuery, $array);
         return $result == null ? null : $result[0];
     }
+
+    function deleteFriendship($pk){
+        $sqlQuery = "DELETE FROM friendship WHERE (requesterId = ? AND addresseeId = ?) OR (requesterId = ? AND addresseeId = ?)";
+        $array = [$pk['requesterId'], $pk['addresseeId'], $pk['addresseeId'], $pk['requesterId']];
+        //executing the query and getting the result
+        $this->executeQuery($sqlQuery, $array);
+    }
+
 }

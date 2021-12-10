@@ -1,18 +1,31 @@
 <?php require_once("head.phtml") ?>
 <body role="document">
-<nav class="navbar navbar-dark bg-dark" style="position: fixed; width: 100%; top: 0px; z-index: 1">
+<!--nav bar style="position: fixed; width: 100%; top: 0px; z-index: 1"-->
+<div class="navbar navbar-dark bg-dark" >
     <div class="d-flex col-12 flex-nowrap justify-content-between">
-        <div class="order-0 p-2 col-2">
-            <a class="navbar-brand"><img src="/images/wavingHand.png" alt="icon" width="30" height="30" class="d-inline-block align-text-top">Assignment</a>
+        <div class="p-2 col-2">
+            <a class="navbar-brand" href="../../controllers/index.php"><img src="/images/wavingHand.png" alt="icon" width="30" height="30" class="d-inline-block align-text-top">Assignment</a>
+            <?php
+                if(isset($_GET['search']) && $_GET['search'] != ''){
+                    echo '<a class="link-info" href="../../controllers/index.php">All Users</a>';
+                }
+                else if(isset($_SESSION['loggedIn'])){
+                    echo '<a class="link-info" href="../../controllers/index.php?search=friends">Friends List</a>';
+                }
+            ?>
         </div>
-        <div class="order-1 p-2 col-2">
-            <form>
-                <input class="form-control" id="searchBox" type="search" placeholder="Search" aria-label="Search">
+        <div class="p-2 col-2">
+            <form action="../../controllers/index.php">
+                <input class="form-control" id="searchBox" type="search"  name="search" placeholder="Search" aria-label="Search">
+                <button style="display: none" type="submit"></button>
             </form>
         </div>
+        <div class="col-2 text-end">
             <?php
                 echo $view->signInBtn;
             ?>
+        </div>
     </div>
+</div>
 </nav>
 </body>

@@ -103,4 +103,16 @@ class UsersRepo implements Repo
             return "WU";//wrong username
         }
     }
+
+    public function getFriends($username){
+        $sqlQuery = 'select * from users WHERE username in (select requesterId from friendship WHERE addresseeId = ? UNION select addresseeId from friendship where requesterId = ?)';
+        $array = [$username, $username];
+        return $this->getObjectsFromQuery($sqlQuery, $array);
+    }
+
+    public function search($data){
+        $sqlQuery = 'select * from users where instr(username, ?) > 0 or instr(firstName, ?) > 0  or instr(lastName, ?) > 0  or instr(email, ?) > 0 ';
+        $array = [$data, $data, $data, $data];
+        return $this->getObjectsFromQuery($sqlQuery, $array);
+    }
 }
