@@ -85,6 +85,43 @@ class UsersRepo implements Repo
         return $statement;
     }
 
+    public function updateAttribute($attribute, $value, $username){
+        if($attribute == 'name'){
+            $sqlQuery = "UPDATE users SET firstName = ?, lastName = ? WHERE username = ?";
+            $value = explode(" ", $value);
+            $firstName = $value[0];
+            $firstName = strtolower($firstName);
+            $firstName = ucfirst($firstName);
+            $lastName = $value[1];
+            $lastName = strtolower($lastName);
+            $lastName = ucfirst($lastName);
+            $array = [$firstName, $lastName, $username];
+        }else if($attribute == 'username'){
+            $sqlQuery1 = "UPDATE friendship SET requesterId = ? WHERE requesterId = ?";
+            $sqlQuery2 = "UPDATE friendship SET addresseeId = ? WHERE addresseeId = ?";
+            $array = [$value, $username];
+            $this->executeQuery($sqlQuery1, $array)->errorInfo();
+            $this->executeQuery($sqlQuery2, $array)->errorInfo();
+            $sqlQuery3 = "SET FOREIGN_KEY_CHECKS = 0";
+            $this->executeQuery($sqlQuery3);
+            $sqlQuery4 = "UPDATE users INNER JOIN images ON users.username = images.username
+                         SET images.username = ?, users.username = ?
+                         WHERE users.username = ?";
+            $array = [$value, $value, $username];
+            $this->executeQuery($sqlQuery4, $array);
+            $sqlQuery = "SET FOREIGN_KEY_CHECKS = 1";
+            $array = [];
+        }
+        else{
+            $sqlQuery = "UPDATE users SET " . $attribute . " = ? WHERE username = ?";
+            if($attribute == 'password'){
+                $value = password_hash($value, PASSWORD_DEFAULT);
+            }
+            $array = [$value, $username];
+        }
+        $this->executeQuery($sqlQuery, $array)->errorInfo();
+    }
+
     public function signIn($username, $password){
         $sqlQuery = "SELECT * FROM users WHERE username= ?";
         $array = [$username];

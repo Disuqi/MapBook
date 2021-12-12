@@ -32,6 +32,19 @@ class Images{
         }
     }
 
+    public function renameDirectory($oldUsername, $newUsername){
+        $oldDir = "../images/" . $oldUsername . "/";
+        $newDir = "../images/" . $newUsername . "/";
+        if(file_exists($oldDir)){
+            rename($oldDir, $newDir);
+            if(file_exists($newDir)){
+                return true;
+            }
+        }else{
+            return false;
+        }
+    }
+
     public function deleteDirectory($un) {
         $dirname = "../images/" . $un;
         if (is_dir($dirname))

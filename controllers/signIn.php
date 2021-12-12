@@ -35,7 +35,7 @@ if(isset($_POST['submit'])){
             $view->validation = "Wrong Password";
             break;
         default:
-            $view->validation = null;
+            $view->validation = "Something Didn't Work";
             break;
     }
 

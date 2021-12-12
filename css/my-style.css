@@ -108,4 +108,17 @@ body{
     width: 150px;
 }
 
+.centered {
+    position: absolute;
+    height: 18rem;
+    margin-top: -18rem;
+    color: white;
+    background-color: grey;
+    transition: 0.2s ease-out;
+    filter: opacity(0%);
+}
+.centered:hover{
+    filter: opacity(90%);
+}
+
 

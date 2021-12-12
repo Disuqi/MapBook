@@ -23,6 +23,9 @@ if(isset($_POST['submit'])){
         case "EE":
             $view->validation = "The email is already in use";
             break;
+        case "IN":
+            $view->validation = "Invalid Name";
+            break;
         case "IF":
             $view->validation = "Invalid First Name";
             break;

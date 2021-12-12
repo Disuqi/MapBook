@@ -1,23 +1,36 @@
 <?php require('template/head.phtml');?>
 <div class="d-flex col-12 justify-content-center">
-    <div class="card" style="width: 40rem; height: 50rem; margin-top: 3rem">
-        <img src=<?php echo $view->profileImage; ?> class="card-img-top" style="height: 18rem; object-fit: cover" alt="profileImage">
+    <div class="card" style="width: 40rem; height: 50rem; margin-top: 3rem; font-size: 20px">
+        <div>
+            <img src="<?php echo $view->profileImage; ?>" class="card-img-top profileImage" style="height: 18rem; object-fit: contain" alt="profileImage">
+            <a data-bs-toggle="modal" data-bs-target="#changeProfileImage">
+            <div class="container-fluid centered justify-content-center text-center">
+                <p style="margin-top: 7rem">Change Profile Image</p>
+            </div></a>
+        </div>
+        <div class="d-flex align-items-center justify-content-center">
+            <?php
+                    echo $view->validation;
+            ?>
+        </div>
         <div class="card-body">
-            <div class="d-flex">
-                <h1 class="card-title">@<?php echo $view->username; ?></h1>
-                <button type="button" class="btn btn-primary text-end">Change</button>
-            </div>
-            <h3 class='card-subtitle text-muted'>Name</h3>
-            <p class="card-text"><?php echo $view->fullName; ?></p>
-            <h3 class='card-subtitle text-muted'>Email</h3>
-            <p class="card-text"><?php echo $view->email; ?></p>
-            <h3 class='card-subtitle text-muted'>Location</h3>
-            <p><?php echo $view->position; ?></p>
-            <div class="col-12 text-center">
-            <?php require_once ('template/homeButton.phtml');?>
+            <?php echo $view->information;?>
+            <div class="mt-2">
+                <div class="d-flex justify-content-center align-items-center">
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#changePassword" ><i class="bi bi-lock-fill"></i> Change Password</button>
+                </div>
+                <div class="col-12 d-flex justify-content-center align-items-center my-2">
+                    <a class="btn btn-dark col-3 m-1" href="../controllers/index.php?account=signOut"><i class="bi bi-box-arrow-left"></i> Sing out</a>
+                    <a class="btn btn-light col-3 m-1" href="../controllers/index.php"><i class="bi bi-house-fill"></i>Home</a>
+                </div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <a class="btn btn-danger" href="../controllers/index.php?account=delete"><i class="bi bi-x-octagon-fill"></i> Delete Account</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <?php
-require('template/footer.phtml');
+require_once('template/footer.phtml');
+require_once('template/changePassword.phtml');
+require_once('template/changeProfileImage.phtml');
