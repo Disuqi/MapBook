@@ -5,11 +5,11 @@
         <div class="p-2 col-4">
             <a class="navbar-brand" href="../../controllers/index.php"><img src="/images/wavingHand.png" alt="icon" width="30" height="30" class="d-inline-block align-text-top">Assignment</a>
             <?php
-                if(isset($_GET['search']) && $_GET['search'] != ''){
-                    echo '<a class="link-info" href="../../controllers/index.php">All Users</a>';
-                }
-                else if(isset($_SESSION['loggedIn'])){
-                    echo '<a class="link-info" href="../../controllers/index.php?search=friends">Friends List</a>';
+                if(isset($_SESSION['loggedIn'])){
+                    echo '<a class="link-info m-2" href="../../controllers/index.php">All Users</a>';
+                    echo '<a class="link-info m-2" href="../../controllers/index.php?search=friends">Friends List <i class="bi bi-heart"></i></a>';
+                    echo '<a class="link-info m-2" href="../../controllers/index.php?search=requests">Requests <i class="bi bi-send"></i></a>';
+                    echo '<a class="link-info m-2" href="../../controllers/index.php?search=declined">Declined <i class="bi bi-slash-circle"></i></a>';
                 }
             ?>
         </div>

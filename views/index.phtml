@@ -1,9 +1,6 @@
-<?php require('template/header.phtml');?>
-<div style="margin-top: 100px">
-    <h3 class="intro">Welcome to my website!</h3>
-    <p class="intro">This website is not complete, however, I am working on it and it will be ready soon!<br> I do not regularly upload the files to the server, therefore, this is not up to date...
-        <br><br>Please do not hesitate to contact me for the source code or anything else!<br>My email is <a href='mailto:disuqi.hijazi.7@gmail.com'>disuqi.hijazi.7@gmail.com</a>, my phone number is +44 7424114244</p>
-</div>
+<?php require('template/header.phtml');
+echo $view->title;
+?>
 <div class="container-fluid d-flex">
     <?php
     echo $view->usersList;

@@ -6,7 +6,7 @@ if(session_id() == ''){
 
 $view = new stdClass();
 $view->pageTitle = "Sign in";
-$view->validation = null;
+$view->validation = "<br>";
 
 require_once("../models/Repo.php");
 require_once("../models/UsersRepo.php");

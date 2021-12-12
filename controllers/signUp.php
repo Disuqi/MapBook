@@ -1,16 +1,24 @@
 <?php
 require_once("../models/Checker.php");
 require_once("../models/Images.php");
+if(session_id() == ''){
+    session_start();
+}
 $view = new stdClass();
 $view->pageTitle = "Sign Up";
-$view->validation = null;
+$view->validation = "<br>";
+
 if(isset($_POST['submit'])){
     $check = new Checker();
     $_POST['firstName'] = strtolower($_POST['firstName']);
     $_POST['firstName'] = ucfirst($_POST['firstName']);
     $_POST['lastName'] = strtolower($_POST['lastName']);
     $_POST['lastName'] = ucfirst($_POST['lastName']);
-    switch($check->checkSingUp($_POST)){
+    $validation = $check->checkSingUp($_POST);
+    if(!isset($_POST[$_SESSION['numToPress']])){
+        $validation = "CP"; //wrong captcha
+    }
+    switch($validation){
         case "IU":
             $view->validation = "Invalid Username";
             break;
@@ -44,7 +52,10 @@ if(isset($_POST['submit'])){
         case "NM":
             $view->validation = "The passwords do not match";
             break;
-        case 'OK':
+        case "CP":
+            $view->validation = "You pressed the wrong number";
+            break;
+        case "OK":
             require_once("../models/Signer.php");
             $signer = new Signer();
             $_POST['lat'] = 0.0;
@@ -53,4 +64,5 @@ if(isset($_POST['submit'])){
             break;
     }
 }
+require_once("captcha.php");
 require_once("../views/signUp.phtml");

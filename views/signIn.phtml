@@ -8,11 +8,8 @@
             <div class="mx-5">
                 <div class="col-12 text-center">
                     <p style="color: red">
-                        <?php if($view->validation != null){
-                            echo "$view->validation";
-                        }else{
-                            echo "<br>";
-                        }
+                        <?php
+                            echo $view->validation;
                         ?>
                     </p>
                 </div>

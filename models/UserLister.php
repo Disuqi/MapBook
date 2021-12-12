@@ -19,6 +19,14 @@ class UserLister{
         return $this->makeCards($users);
     }
 
+    public function getAllRequests($username){
+        $users = $this->usersRepo->getAllStatusCode("R", $username);
+        return $this->makeCards($users);
+    }
+    public function getAllDeclined($username){
+        $users = $this->usersRepo->getAllStatusCode("D", $username);
+        return $this->makeCards($users);
+    }
     public function getRequests($username){
         $users = $this->usersRepo->getRequests($username);
         return $this->makeListItems($users);
@@ -34,7 +42,7 @@ class UserLister{
         return $this->makeCards($users);
     }
     public function getFriends($username){
-        $users = $this->usersRepo->getFriends($username);
+        $users = $this->usersRepo->getAllStatusCode("A", $username);
         return $this->makeCards($users);
     }
 

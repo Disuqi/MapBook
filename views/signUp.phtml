@@ -7,11 +7,8 @@
             </div>
             <div class='m-0 col-12 text-center'>
                 <p style="color: red">
-                    <?php if($view->validation != null){
+                    <?php
                         echo "$view->validation";
-                    }else{
-                        echo "<br>";
-                    }
                     ?>
                 </p>
             </div>
@@ -31,9 +28,15 @@
                     <input type="text" name="firstName" class="form-control" placeholder="First Name" value="<?php if(isset($_POST['submit'])){echo $_POST['firstName'];} ?>">
                     <input type="text" name="lastName" class="form-control" placeholder="Last Name" value="<?php if(isset($_POST['submit'])){echo $_POST['lastName'];} ?>">
                 </div>
-                <div class="mb-3">
+                <div class="mb-2">
                     <input type="password" name="password" class="form-control" placeholder="Password">
                     <input type="password" name="password2" class="form-control" placeholder="Confirm Password">
+                </div>
+                <div class="mb-2 form-check text-center" style="100%">
+                    <label class="form-check-label">
+                        Press the button at position <?php echo $view->numToPress; ?>
+                    </label>
+                    <?php echo $view->captcha; ?>
                 </div>
                 <div class="mb-3">
                     <button type="submit" name="submit" class="btn form-control signUpBtn">Sign Up</button>

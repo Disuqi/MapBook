@@ -13,7 +13,7 @@ if(isset($_SESSION['loggedIn'])){
     $usersRepo = new UsersRepo();
     $imageRepo = new ImagesRepo();
     $un = $_SESSION['username'];
-    $view->validation = "<span class='btn btn-secondary disabled mt-1'>Account Settings</span>";
+    $view->validation = "<span class='link-secondary disabled mt-1'>Account Settings <i class='bi bi-gear-wide-connected'></i></span>";
     if(isset($_POST['Submit'])){
         require_once '../models/Checker.php';
         require_once '../models/Images.php';

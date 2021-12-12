@@ -35,7 +35,7 @@ body{
     border-radius: 5px;
 }
 .signUp{
-    height: 650px;
+    height: 700px;
     width: 400px;
 }
 .copyright{
@@ -80,12 +80,6 @@ body{
     width: 60px;
 }
 
-.intro{
-    text-align: center;
-    margin-inline: 100px;
-    margin-top: 20px;
-    font-family: "Roboto";
-}
 
 .userCard{
     width: 18rem;
@@ -118,7 +112,7 @@ body{
     filter: opacity(0%);
 }
 .centered:hover{
-    filter: opacity(90%);
+    filter: opacity(85%);
 }
 
 

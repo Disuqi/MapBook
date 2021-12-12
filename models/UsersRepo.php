@@ -141,18 +141,17 @@ class UsersRepo implements Repo
         }
     }
 
-    public function getFriends($username){
-        $sqlQuery = 'SELECT * FROM users WHERE username IN (SELECT requesterId FROM friendship WHERE addresseeId = ? AND statusCode = "A" UNION select addresseeId FROM friendship WHERE requesterId = ? AND statusCode = "A")';
-        $array = [$username, $username];
-        return $this->getObjectsFromQuery($sqlQuery, $array);
-    }
-
     public function getRequests($username){
         $sqlQuery = 'SELECT * FROM users WHERE username IN (SELECT requesterId FROM friendship WHERE addresseeId = ? AND statusCode = "R")';
         $array = [$username];
         return $this->getObjectsFromQuery($sqlQuery, $array);
     }
 
+    public function getAllStatusCode($statusCode, $username){
+        $sqlQuery = 'SELECT * FROM users WHERE username IN (SELECT requesterId FROM friendship WHERE addresseeId = ? AND statusCode = "'.$statusCode.'" UNION select addresseeId FROM friendship WHERE requesterId = ? AND statusCode = "'.$statusCode.'")';
+        $array = [$username, $username];
+        return $this->getObjectsFromQuery($sqlQuery, $array);
+    }
     public function search($data){
         $sqlQuery = 'SELECT * FROM users WHERE instr(username, ?) > 0 OR instr(firstName, ?) > 0  OR instr(lastName, ?) > 0  OR instr(email, ?) > 0 ';
         $array = [$data, $data, $data, $data];
