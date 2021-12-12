@@ -9,7 +9,6 @@ if(isset($_SESSION['loggedIn'])){
     require_once '../models/Repo.php';
     require_once '../models/UsersRepo.php';
     require_once '../models/ImagesRepo.php';
-    require_once '../models/Images.php';
 
     $usersRepo = new UsersRepo();
     $imageRepo = new ImagesRepo();
@@ -17,8 +16,10 @@ if(isset($_SESSION['loggedIn'])){
     $view->validation = "<span class='btn btn-secondary disabled mt-1'>Account Settings</span>";
     if(isset($_POST['Submit'])){
         require_once '../models/Checker.php';
+        require_once '../models/Images.php';
         $checker = new Checker();
-        $validation = "";
+        $imageHandler = new Images();
+        $validation = "OK";
         $attribute = "";
         $value = "";
         $view->validation = "<span class='btn btn-outline-danger disabled mt-1'>";
@@ -27,19 +28,40 @@ if(isset($_SESSION['loggedIn'])){
             $value = $_POST['Username'];
             $validation = $checker->checkUsername($value);
         }
-        if(isset($_POST['Email'])){
+        else if(isset($_POST['Email'])){
             $attribute = "email";
             $value = $_POST['Email'];
             $validation = $checker->checkEmail($value);
         }
-        if(isset($_POST['Name'])){
+        else if(isset($_POST['Name'])){
             $attribute = "name";
             $value = $_POST['Name'];
             $validation = $checker->checkName($value);
-        }if(isset($_POST['oldPassword'])){
+        }else if(isset($_POST['oldPassword'])){
             $attribute = "password";
             $value = $_POST["newPassword"];
             $validation = $checker->checkPassword($_POST['newPassword'], $_POST['newPassword2'], $un, $_POST['oldPassword']);
+        } else if(isset($_FILES["image"]) && $_FILES['image']['name'] != ""){
+            $validation = "PI";
+            $profileImage = $imageHandler->addImage($un, 1);
+            if(!$profileImage) {
+                $validation = "IF";//invalid file
+            }else {
+                $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+                $_SESSION['profileImage'] = "../images/" . $un . '/1.' . $ext;
+                if($imageRepo->getProfileImage($un) == null) {
+                    $imageRepo->addObject(["username" => $un, "ext" => $ext]);
+                    $imageRepo->setProfileImage(["id"=>1, "username" => $un]);
+                }
+            }
+
+        } else if($_POST['Submit'] == 'delete'){
+            $validation = "PI";
+            $pk = ['id'=> 1, 'username' => $un];
+            $ext = $imageRepo->getAttribute('ext', $pk);
+            $imageHandler->deleteImage($un, 1, $ext);
+            $imageRepo->deleteObject($pk);
+            $_SESSION['profileImage'] = '../images/noProfilePic.svg';
         }
         switch($validation){
             case "IU":
@@ -81,10 +103,15 @@ if(isset($_SESSION['loggedIn'])){
             case "NM":
                 $view->validation .= "The passwords do not match <i class='bi bi-x-circle-fill'></i></span>";
                 break;
+            case "IF":
+                $view->validation .= "There is something wrong with your images <i class='bi bi-x-circle-fill'></i></span>";
+                break;
+            case "PI":
+                $view->validation = "<span class='btn btn-outline-success disabled mt-1'>Profile Image Changed <i class='bi bi-check-circle-fill'></i></span>";
+                break;
             default:
                 $usersRepo->updateAttribute($attribute, $value, $un);
                 if($attribute == 'username'){
-                    $imageHandler = new Images();
                     $imageHandler->renameDirectory($un, $value);
                     $_SESSION['username'] = $value;
                     $un = $value;
@@ -94,7 +121,12 @@ if(isset($_SESSION['loggedIn'])){
         }
     }
     $user = $usersRepo->getObject($un);
-    $view->profileImage = $imageRepo->getProfileImage($un)->getImagePath();
+    $profileImage = $imageRepo->getProfileImage($un);
+    if($profileImage != null){
+        $view->profileImage = $profileImage->getImagePath();
+    }else{
+        $view->profileImage = "../images/noProfilePic.svg";
+    }
     $view->information = "";
     $infoList = ['Username' => $user->getUsername(), 'Name' => $user->getFullName(), 'Email' => $user->getEmail(), 'Location' => $user->getPosition()];
     foreach($infoList as $key=>$value){
@@ -110,8 +142,8 @@ if(isset($_SESSION['loggedIn'])){
                     </div>
                 </form>
                 <div class="order-2">
-                    <button class="btn btn-primary" type="submit" form="editValue" name="Submit">Change</button>
-                    <a class="btn btn-danger" type="submit" href="account.php">X</a>
+                    <button class="btn btn-primary" type="submit" form="editValue" name="Submit">Change <i class="bi bi-check-lg"></i></button>
+                    <a class="btn btn-danger" type="submit" href="account.php"><i class="bi bi-x-lg"></i></a>
                 </div>';
             }else {
                 $view->information .= '<h1 class="card-title order-0">@' . $value . '</h1>
@@ -127,8 +159,8 @@ if(isset($_SESSION['loggedIn'])){
                 </form>
                 </div>
                 <div class="order-2">
-                    <button class="btn btn-primary" type="submit" form="editValue" name="Submit">Change</button>
-                    <a class="btn btn-danger" type="submit" href="account.php">X</a>
+                    <button class="btn btn-primary" type="submit" form="editValue" name="Submit">Change <i class="bi bi-check-lg"></i></button>
+                    <a class="btn btn-danger" type="submit" href="account.php"><i class="bi bi-x-lg"></i></a>
                 </div>
                 ';
             }else{

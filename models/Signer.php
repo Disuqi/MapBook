@@ -41,22 +41,20 @@ Class Signer{
 
     public function signUp($dbRow){
         $un = $dbRow['username']; //un is an abbreviation for username
-        $profileImage = $this->imageHandler->addImage($un, 1);
+        $this->userRepo->addObject(new UserDTO($dbRow));
         if($_FILES['image']['name'] != ""){
+            $profileImage = $this->imageHandler->addImage($un, 1);
             if(!$profileImage) {
                 return "There is something wrong with your image";
             }else {
                 $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
                 $_SESSION['profileImage'] = "../images/" . $un . '/1.' . $ext;
+                $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+                $this->imageRepo->addObject(["username" => $un, "ext" => $ext]);
+                $this->imageRepo->setProfileImage(["id"=>1, "username" => $un]);
             }
         }else{
             $_SESSION['profileImage'] = "../images/noProfilePic.svg";
-        }
-        $this->userRepo->addObject(new UserDTO($dbRow));
-        if($_FILES['image']['name'] != ""){
-            $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-            $this->imageRepo->addObject(["username" => $un, "ext" => $ext]);
-            $this->imageRepo->setProfileImage(["id"=>1, "username" => $un]);
         }
         $this->signIn($un);
         $this->index();

@@ -5,15 +5,16 @@
                 <h5 class="modal-title" id="staticBackdropLabel">Change Profile Image</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form id="changeImageForm" action="<?php echo $_SERVER["PHP_SELF"]?>" method="post">
-                    <label for="formFile" class="form-label">Upload Your New Profile Image</label>
-                    <input class="form-control" type="file" name="image" accept="image/png, image/jpeg">
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" name="Submit" form="changeImageForm">Change</button>
-            </div>
+            <form id="changeImageForm"  enctype="multipart/form-data" action="<?php echo $_SERVER["PHP_SELF"]?>" method="post">
+                <div class="modal-body">
+                        <label for="formFile" class="form-label">Upload Your New Profile Image</label>
+                        <input class="form-control" type="file" name="image" accept="image/png, image/jpeg">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" name="Submit" form="changeImageForm">Change <i class="bi bi-check-lg"></i></button>
+                    <button type="submit" class="btn btn-danger" name="Submit" form="changeImageForm" value="delete" >Delete Profile Image <i class="bi bi-trash-fill"></i></button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

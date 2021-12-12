@@ -7,22 +7,18 @@ class Images{
             mkdir($uploadDir);
         }
         $uploadedFile = $_FILES['image']['name'];
-        if($uploadedFile != ""){
-            $ext = pathinfo($uploadedFile, PATHINFO_EXTENSION);
-            $uploadFile = $uploadDir . $id . ".". $ext;
-            move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile);
-            if(file_exists($uploadFile)){
-                return true;
-            }else{
-                return false;
-            }
+        $ext = pathinfo($uploadedFile, PATHINFO_EXTENSION);
+        $uploadFile = $uploadDir . $id . ".". $ext;
+        move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile);
+        if(file_exists($uploadFile)){
+            return true;
         }else{
             return false;
         }
     }
 
-    public function deleteImage($un, $id){
-        $file = "../images/" . $un . '/' . $id;
+    public function deleteImage($un, $id, $ext){
+        $file = "../images/" . $un . '/' . $id . '.' . $ext;
         unlink($file);
         if(!file_exists($file)) {
             return true;
