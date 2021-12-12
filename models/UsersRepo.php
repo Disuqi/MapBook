@@ -163,4 +163,9 @@ class UsersRepo implements Repo
         $array = [$username];
         return $this->getObjectsFromQuery($sqlQuery, $array);
     }
+
+    public function getAllUsernames(){
+        $sqlQuery = 'SELECT username FROM users';
+        return $this->executeQuery($sqlQuery);
+    }
 }

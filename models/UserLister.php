@@ -85,7 +85,7 @@ class UserLister{
             if(strcasecmp($loggedUn, $un) != 0) {
                 $usersList .= "
                     <div class='card userCard'>
-                        <img src=". $profileImage ." class='card-img-top' style='max-height: 10rem; object-fit: contain' alt='profileImage'>
+                        <img src=". $profileImage ." class='card-img-top' style='max-height: 10rem; contain' alt='profileImage'>
                         <div class='card-body'>
                         <h5>@$un</h5>
                     ";

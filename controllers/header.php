@@ -4,7 +4,7 @@ if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']){
     $view->signInBtn = '
                         <div class="d-flex justify-content-end">
                             <div class="dropdown dropstart">
-                              <button class="btn friendR" type="button" data-bs-toggle="dropdown" style="height: 50px;" aria-expanded="false"><i style="font-size: 24px" class="bi bi-people-fill"></i></button>
+                              <button class="btn linker" type="button" data-bs-toggle="dropdown" style="height: 50px;" aria-expanded="false"><i style="font-size: 30px" class="bi bi-people-fill"></i></button>
                               <ul class="dropdown-menu dropdown-menu-dark text-end" style="right: calc(50px + 0.4vw)" aria-labelledby="account">
                                 '. $userLister->getRequests($_SESSION['username']).'
                               </ul>
@@ -21,7 +21,7 @@ if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']){
                     ';
 } else{
     $view->signInBtn = '
-                        <div class="btn-group">
+                        <div class="p-1 btn-group">
                                 <a class="btn signInBtn" href="signIn.php" >Sign In</a>
                                 <a class="btn signInBtn dropdown-toggle-split" href="signUp.php">Up</a>
                         </div>

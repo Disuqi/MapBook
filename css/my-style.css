@@ -87,13 +87,15 @@ body{
     margin: 10px;
 }
 
-.friendR{
+.linker{
     margin-right: 0.25rem;
     color: white;
+    transition: 0.2s ease-out;
 }
-.friendR:hover,
-.friendR:focus{
-    color: lightgrey;
+.linker:hover,
+.linker:focus{
+    font-size: 18px;
+    color: paleturquoise;
 }
 
 .listItem{
@@ -114,5 +116,4 @@ body{
 .centered:hover{
     filter: opacity(85%);
 }
-
 
