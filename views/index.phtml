@@ -1,9 +1,13 @@
 <?php require('template/header.phtml');
-echo $view->title;
 ?>
-<div class="container-fluid d-flex">
+<div>
     <?php
     echo $view->usersList;
+    ?>
+</div>
+<div>
+    <?php
+    echo $view->pagination;
     ?>
 </div>
 <?php

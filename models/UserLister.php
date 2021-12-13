@@ -15,35 +15,64 @@ class UserLister{
     }
 
     public function getAllUsers(){
-        $users = $this->usersRepo->getAll();
+        $users = $this->usersRepo->getPageOfUsers(0);
+        return $this->makeCards($users);
+    }
+
+    public function getLastPageNumber(){
+        return $this->usersRepo->getLastPageNumber();
+    }
+
+    public function getPageOfUsers($page){
+        $users = $this->usersRepo->getPageOfUsers($page-1);
         return $this->makeCards($users);
     }
 
     public function getAllRequests($username){
         $users = $this->usersRepo->getAllStatusCode("R", $username);
-        return $this->makeCards($users);
+        $result = $this->makePageTitle('Requests', count($users));
+        $result .= $this->makeCards($users);
+        return $result;
     }
     public function getAllDeclined($username){
         $users = $this->usersRepo->getAllStatusCode("D", $username);
-        return $this->makeCards($users);
+        $result = $this->makePageTitle('Declined', count($users));
+        $result .= $this->makeCards($users);
+        return $result;
     }
     public function getRequests($username){
         $users = $this->usersRepo->getRequests($username);
         return $this->makeListItems($users);
     }
+    public function getFriends($username){
+        $users = $this->usersRepo->getAllStatusCode("A", $username);
+        $result = $this->makePageTitle('Friends', count($users));
+        $result .= $this->makeCards($users);
+        return $result;
+    }
 
     public function search($data){
         $users = $this->usersRepo->search($data);
-        return $this->makeCards($users);
+        $result = $this->makePageTitle('You searched for "' . $data . '"', count($users));
+        $result .= $this->makeCards($users);
+        return $result;
     }
 
     public function anonymousSearch($username){
         $users = $this->usersRepo->search2($username);
-        return $this->makeCards($users);
+        $result = $this->makePageTitle('You searched for "' . $username . '"', count($users));
+        $result .= $this->makeCards($users);
+        return $result;
     }
-    public function getFriends($username){
-        $users = $this->usersRepo->getAllStatusCode("A", $username);
-        return $this->makeCards($users);
+
+    private function makePageTitle($title, $numOfUsers){
+        $needS = $numOfUsers == 1 ? null : 's';
+        $pageTitle = '<div class="container-fluid" style="margin-top: 80px; margin-left: 5px"><h1>'.$title.'</h1><h5>'.$numOfUsers.' result' .$needS.'</h5></div>';
+        if($numOfUsers == 0){
+            return null;
+        }else{
+            return $pageTitle;
+        }
     }
 
     private function makeListItems($users){
@@ -70,7 +99,10 @@ class UserLister{
     }
 
     private function makeCards($users){
-        $usersList = "";
+        if($users == null){
+            return null;
+        }
+        $usersList = "<div class='row justify-content-start m-0'>";
         foreach ($users as $user){
             $un = $user->getUsername();
             $prImageDTO = $this->imagesRepo->getProfileImage($un);//profile image dto
@@ -80,12 +112,10 @@ class UserLister{
             }else{
                 $profileImage = $prImageDTO->getImagePath();
             }
-
-
             if(strcasecmp($loggedUn, $un) != 0) {
                 $usersList .= "
                     <div class='card userCard'>
-                        <img src=". $profileImage ." class='card-img-top' style='max-height: 10rem; contain' alt='profileImage'>
+                        <img src=". $profileImage ." class='card-img-top' style='max-height: 10rem; object-fit: contain' alt='profileImage'>
                         <div class='card-body'>
                         <h5>@$un</h5>
                     ";
@@ -95,6 +125,7 @@ class UserLister{
                 $usersList .= "</div></div>";
             }
         }
+        $usersList .= '</div>';
         return $usersList;
     }
 
@@ -106,7 +137,7 @@ class UserLister{
                                 <p>".$user->getEmail()."</p>
                                 <h6 class='card-subtitle text-muted'>Position</h6>
                                 <p>".$user->getPosition()."</p>
-                                <div class='container-fluid text-center'>
+                                <div class='d-flex  align-items-center justify-content-center text-center'>
                                 ";
 
         $friendship = $this->friendshipRepo->areFriends(["requesterId" => $loggedUn, "addresseeId" => $user->getUsername()]);
@@ -155,6 +186,10 @@ class UserLister{
     }
 
     private function generateLink($action, $requester, $addressee){
-        return "index.php?friends=$action&requester=$requester&addressee=$addressee";
+        $base = "index.php?";
+        if(isset($_GET['search'])){
+            $base.= "search=".$_GET['search']."&";
+        }
+        return $base .= "friends=$action&requester=$requester&addressee=$addressee";
     }
 }

@@ -1,7 +1,6 @@
 <?php
 
 //checking if a session has already been started, if not then start one
-ini_set('max_execution_time', 0);
 if(session_id() == ''){
     session_start();
 }
@@ -14,8 +13,8 @@ $view->usersList = "";
 require_once('../models/Signer.php');
 require_once('cookie.php');
 require_once('../models/UserLister.php');
-
 $userLister = new UserLister();
+require_once ('pagination.php');
 if(isset($_GET['friends']) && isset($_SESSION['loggedIn']) && (strcasecmp($_GET['requester'], $_SESSION['username']) == 0 || strcasecmp($_GET['addressee'], $_SESSION['username']) == 0)) {
         require_once('friendship.php');
 }
@@ -25,36 +24,31 @@ if(isset($_GET['search'])){
     {
         switch($_GET['search']){
             case 'friends':
-                $view->title = '<h1 style="margin-top: 80px; margin-left: 20px">Friend List</h1>';
                 $users = $userLister->getFriends($_SESSION['username']);
-                $view->usersList = $users == null? "<i class='m-2 bi bi-emoji-frown' style='font-size: 20px'> No Friends</i>" :  $users;
+                $view->usersList = $users == null? "<div style='margin-top: 80px; margin-left: 20px'><i class='m-2 bi bi-emoji-frown' style='font-size: 25px'> No Friends</i></div>" :  $users;
                 break;
             case 'requests':
-                $view->title = '<h1 style="margin-top: 80px; margin-left: 20px">Requests</h1>';
                 $users = $userLister->getAllRequests($_SESSION['username']);
-                $view->usersList = $users == null? "<i class='m-2 bi bi-inbox-fill' style='font-size: 20px'> No Pending Requests</i>" :  $users;
+                $view->usersList = $users == null? "<div style='margin-top: 80px; margin-left: 20px'><i class='m-2 bi bi-inbox-fill' style='font-size: 25px'> No Pending Requests</i></div>" :  $users;
                 break;
             case 'declined':
-                $view->title = '<h1 style="margin-top: 80px; margin-left: 20px">Declined</h1>';
                 $users= $userLister->getAllDeclined($_SESSION['username']);
-                $view->usersList = $users == null? "<i class='m-2 bi bi-inbox-fill' style='font-size: 20px'> No Declined Requests</i>" :  $users;
+                $view->usersList = $users == null? "<div style='margin-top: 80px; margin-left: 20px'><i class='m-2 bi bi-inbox-fill' style='font-size: 25px'> No Declined Requests</i></div>" :  $users;
                 break;
             case '':
-                $view->title = '<h1 style="margin-top: 80px; margin-left: 20px">All Users</h1>';
+                $view->usersList .= '<h1 style="margin-top: 80px; margin-left: 20px">All Users</h1>';
                 $users = $userLister->getAllUsers();
-                $view->usersList = $users == null ? "<i class='m-2 bi bi-inbox-fill' style='font-size: 20px'> No Users</i>" : $users;
+                $view->usersList = $users == null ? "<div style='margin-top: 40px; margin-left: 20px'><i class='m-2 bi bi-inbox-fill' style='font-size: 25px'> No Users</i></div>" : $users;
                 break;
             default:
-                $view->title = '<h1 style="margin-top: 80px; margin-left: 20px">Search Result</h1>';
-                $view->usersList = $userLister->search($_GET['search']);
+                $view->usersList .= $userLister->search($_GET['search']);
                 break;
     }}else{
-        $view->title = '<h1 style="margin-top: 80px; margin-left: 20px">Search Result</h1>';
-        $view->usersList = $userLister->anonymousSearch($_GET['search']);
+        $view->usersList .= $userLister->anonymousSearch($_GET['search']);
     }
 }else {
-    $view->title = '<h1 style="margin-top: 80px; margin-left: 20px">All Users</h1>';
-    //$view->usersList = $userLister->getAllUsers();
+    $view->usersList .= '<h1 style="margin-top: 80px; margin-left: 20px">All Users</h1>';
+    $view->usersList .= $userLister->getPageOfUsers($currentPage);
 }
 
 require_once("header.php");

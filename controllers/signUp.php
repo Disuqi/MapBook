@@ -7,7 +7,6 @@ if(session_id() == ''){
 $view = new stdClass();
 $view->pageTitle = "Sign Up";
 $view->validation = "<br>";
-
 if(isset($_POST['submit'])){
     $check = new Checker();
     $_POST['firstName'] = strtolower($_POST['firstName']);
@@ -15,7 +14,7 @@ if(isset($_POST['submit'])){
     $_POST['lastName'] = strtolower($_POST['lastName']);
     $_POST['lastName'] = ucfirst($_POST['lastName']);
     $validation = $check->checkSingUp($_POST);
-    if(!isset($_POST[$_SESSION['numToPress']])){
+    if(!isset($_POST['captcha']) || $_POST['captcha'] != $_SESSION['numToPress']){
         $validation = "CP"; //wrong captcha
     }
     switch($validation){

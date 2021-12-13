@@ -164,8 +164,17 @@ class UsersRepo implements Repo
         return $this->getObjectsFromQuery($sqlQuery, $array);
     }
 
+    public function getPageOfUsers($page){
+        $sqlQuery = 'SELECT * FROM users LIMIT 18 OFFSET ' . $page * 18;
+        return $this->getObjectsFromQuery($sqlQuery);
+    }
+
+    public function getLastPageNumber(){
+        $sqlQuery = 'SELECT COUNT(username)/18 FROM users';
+        return ceil($this->executeQuery($sqlQuery)->fetch()[0]);
+    }
     public function getAllUsernames(){
         $sqlQuery = 'SELECT username FROM users';
-        return $this->executeQuery($sqlQuery);
+        return $this->executeQuery($sqlQuery)->fetchAll();
     }
 }

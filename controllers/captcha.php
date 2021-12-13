@@ -10,11 +10,12 @@ for($i = 0; $i<$amountOfNum; $i++){
 }
 $view->numToPress = array_rand($ranNumArray) + 1;
 $_SESSION['numToPress'] = $ranNumArray[$view->numToPress - 1];
-$view->captcha = '<div class="btn-group" role="group" aria-label="Basic radio toggle button group">';
+$view->captcha = '<div class="btn-group" role="group" aria-label="Captcha radio toggle button group">';
 
 for($i = 0; $i <count($ranNumArray); $i++){
     $view->captcha .= '  
-      <input type="radio" class="btn-check" name="'.$ranNumArray[$i].'" id="btnradio'.$i.'" autocomplete="off">
+      <input type="radio" class="btn-check" name="captcha"  value="'.$ranNumArray[$i].'" id="btnradio'.$i.'" autocomplete="off">
       <label class="btn btn-outline-primary" for="btnradio'.$i.'">'.$ranNumArray[$i].'</label>';
+
 }
 $view->captcha .= '</div>';
