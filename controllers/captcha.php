@@ -1,4 +1,6 @@
 <?php
+
+//captcha for sign up page to prevent spam
 if(isset($_SESSION['numToPress'])){
     $_SESSION['numToPress'] = null;
     unset($_SESSION['numToPress']);

@@ -43,6 +43,7 @@ class ImageDTO
         return "../images/$this->_username/$this->_id.$this->_ext";
     }
 
+    //converts all the fields into an array
     public function toArray()
     {
         return [$this->_id, $this->_username, $this->_date, $this->_profileImage];

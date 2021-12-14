@@ -1,19 +1,24 @@
 <?php
 require_once("../models/Checker.php");
 require_once("../models/Images.php");
+//starting session
 if(session_id() == ''){
     session_start();
 }
 $view = new stdClass();
 $view->pageTitle = "Sign Up";
 $view->validation = "<br>";
+//checking if submit button was pressed
 if(isset($_POST['submit'])){
+    //checks all the inputted data and returns a message according to the error code received
     $check = new Checker();
+    //making sure that first name and last name only have the first letter in caps
     $_POST['firstName'] = strtolower($_POST['firstName']);
     $_POST['firstName'] = ucfirst($_POST['firstName']);
     $_POST['lastName'] = strtolower($_POST['lastName']);
     $_POST['lastName'] = ucfirst($_POST['lastName']);
     $validation = $check->checkSingUp($_POST);
+    //checking captcha
     if(!isset($_POST['captcha']) || $_POST['captcha'] != $_SESSION['numToPress']){
         $validation = "CP"; //wrong captcha
     }
@@ -55,6 +60,7 @@ if(isset($_POST['submit'])){
             $view->validation = "You pressed the wrong number";
             break;
         case "OK":
+            //everything went well so the user is being signed up
             require_once("../models/Signer.php");
             $signer = new Signer();
             $_POST['lat'] = 0.0;

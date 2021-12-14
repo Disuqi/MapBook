@@ -3,6 +3,7 @@ class UserDTO{
 
     protected $_username, $_firstName, $_lastName, $_email, $_password, $_lat, $_lng;
 
+
     public function __construct($dbRow){
         //initiating all fields
         $this->_username = $dbRow['username'];
@@ -44,6 +45,8 @@ class UserDTO{
     public function getPosition(){
         return "($this->_lat, $this->_lng)";
     }
+
+    //converting to all the values into an array
     public function toArray(){
         return [$this->_username, $this->_firstName, $this->_lastName, $this->_email, $this->_password, $this->_lat, $this->_lng];
     }

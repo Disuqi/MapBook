@@ -5,8 +5,8 @@ if(session_id() == ''){
 $view = new stdClass();
 $view->pageTitle = 'Account';
 
+//if logged in then show account settings
 if(isset($_SESSION['loggedIn'])){
-    require_once '../models/Repo.php';
     require_once '../models/UsersRepo.php';
     require_once '../models/ImagesRepo.php';
 
@@ -14,6 +14,7 @@ if(isset($_SESSION['loggedIn'])){
     $imageRepo = new ImagesRepo();
     $un = $_SESSION['username'];
     $view->validation = "<span class='link-secondary disabled mt-1'>Account Settings <i class='bi bi-gear-wide-connected'></i></span>";
+    //chekcking if the user is trying to change something and making relevant checks and changes
     if(isset($_POST['Submit'])){
         require_once '../models/Checker.php';
         require_once '../models/Images.php';
@@ -63,6 +64,7 @@ if(isset($_SESSION['loggedIn'])){
             $imageRepo->deleteObject($pk);
             $_SESSION['profileImage'] = '../images/noProfilePic.svg';
         }
+        //checking if there was something wrong with the input and setting the message sent to the user
         switch($validation){
             case "IU":
                 $view->validation .= "Invalid Username <i class='bi bi-x-circle-fill'></i></span>";
@@ -114,12 +116,20 @@ if(isset($_SESSION['loggedIn'])){
                 if($attribute == 'username'){
                     $imageHandler->renameDirectory($un, $value);
                     $_SESSION['username'] = $value;
+                    $profileImage = $imageRepo->getProfileImage($value);
+                    if($profileImage != null){
+                        $profileImage = $profileImage->getImagePath();
+                    }else{
+                        $profileImage = "../images/noProfilePic.svg";
+                    }
+                    $_SESSION['profileImage'] = $profileImage;
                     $un = $value;
                 }
                 $view->validation = "<span class='btn btn-outline-success disabled mt-1'>".ucfirst($attribute). " Changed <i class='bi bi-check-circle-fill'></i></span>";
                 break;
         }
     }
+    //Making the view, basically making the html code, that changes according to the buttons pressed
     $user = $usersRepo->getObject($un);
     $profileImage = $imageRepo->getProfileImage($un);
     if($profileImage != null){
@@ -172,7 +182,7 @@ if(isset($_SESSION['loggedIn'])){
         }
         $view->information .= '</div>';
     }
-}else{
+}else{//if not logged in then send to the sign in page
     header("Location: http://" . $_SERVER['HTTP_HOST'] . "/controllers/signIn.php");
     exit;
 }

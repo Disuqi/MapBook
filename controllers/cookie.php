@@ -1,5 +1,6 @@
 <?php
 
+//checking if cookie is allowed or not
 if(isset($_GET["cookies"])){
     if($_GET["cookies"] == "true"){
         setcookie("allowCookies", "true", time() +(86400 * 365), "/");
@@ -16,7 +17,7 @@ if(isset($_GET["cookies"])){
 //Cookies button or auto login
 if(!isset($_SESSION["doNotAllowCookies"]) && !isset($_COOKIE["allowCookies"])) {
     echo '
-        <div class="col-12 text-center copyright">
+        <div class="col-12 text-start copyright" style="z-index: 2">
             <button id="cookieBtn" data-bs-toggle="modal" data-bs-target="#cookiesModal"></button>
         </div>
 ';

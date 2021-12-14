@@ -1,4 +1,5 @@
 <?php
+//deals with pagination and all the pages
 if(!isset($_GET['search'])){
     $lastPage = $userLister->getLastPageNumber();
     if($lastPage >= 7) {

@@ -12,7 +12,8 @@ if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']){
                             <div class="dropdown dropstart">
                               <button class="btn account" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-image: url(' . $_SESSION['profileImage'] . '); margin-right: 0.5vw"></button>
                               <ul class="dropdown-menu dropdown-menu-dark text-end" style="right: calc(50px + 0.4vw)" aria-labelledby="account">
-                                <li><a class="dropdown-item active" href="account.php">Account <i class="bi bi-gear-wide-connected"></i></a></li>
+                                <li class="dropdown-item disabled">@'.$_SESSION['username'].'</li>
+                                <li><a class="dropdown-item" href="account.php">Account Settings <i class="bi bi-gear-wide-connected"></i></a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="../../controllers/index.php?account=signOut">Sign out <i class="bi bi-box-arrow-right"></i></a></li>
                               </ul>

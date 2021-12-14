@@ -1,6 +1,11 @@
 <?php
 class Images{
 
+    /**
+     * @param string $un username
+     * @param int $id id of image
+     * @return bool if everything went well and false if there was a problem
+    */
     public function addImage($un, $id){
         $uploadDir = "../images/" . $un . '/';
         if(!file_exists($uploadDir)) {
@@ -17,6 +22,12 @@ class Images{
         }
     }
 
+    /**
+     * @param string $un username
+     * @param int $id id of image
+     * @param string $ext extension of image e.g. png or jpg
+     * @return bool if everything went well and false if there was a problem
+     */
     public function deleteImage($un, $id, $ext){
         $file = "../images/" . $un . '/' . $id . '.' . $ext;
         unlink($file);
@@ -27,7 +38,12 @@ class Images{
             return false;
         }
     }
-
+    /**
+     * @param string $oldUsername
+     * @param string $newUsername
+     * @return bool if everything went well and false if there was a problem
+     */
+    //renames the folder of a user to the new username
     public function renameDirectory($oldUsername, $newUsername){
         $oldDir = "../images/" . $oldUsername . "/";
         $newDir = "../images/" . $newUsername . "/";
@@ -41,6 +57,11 @@ class Images{
         }
     }
 
+    /**
+     * @param string $un username
+     * @return bool if everything went well and false if there was a problem
+     */
+    //deletes a folder and all it's content of a certain user
     public function deleteDirectory($un) {
         $dirname = "../images/" . $un;
         if (is_dir($dirname))

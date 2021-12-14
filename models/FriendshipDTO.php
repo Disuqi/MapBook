@@ -30,6 +30,7 @@ class FriendshipDTO{
         return $this->_statusCode;
     }
 
+    //converts all the fields into an array
     public function toArray()
     {
         return [$this->_requesterId, $this->_addresseeId, $this->_date, $this->_statusCode];
