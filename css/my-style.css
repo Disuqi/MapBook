@@ -39,7 +39,7 @@ body{
     width: 400px;
 }
 .copyright{
-    position: fixed;
+    position: absolute;
     font-size: 15px;
     bottom: 0;
     right: 0;
