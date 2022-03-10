@@ -186,7 +186,7 @@ class UserLister{
             //get profile image
             $prImageDTO = $this->imagesRepo->getProfileImage($un);//profile image dto
             //get logged in user username
-            $loggedUn = isset($_SESSION['username'])? $_SESSION['username'] : null;
+            $loggedUn = isset($_SESSION['username'])? $_SESSION['username'] : "";
             //in they have no image then set the default image
             if($prImageDTO == null){
                 $profileImage = "../images/noProfilePic.svg";
@@ -198,7 +198,7 @@ class UserLister{
                 //making basic card
                 $usersList .= "
                     <div class='card userCard'>
-                        <img src=". $profileImage ." class='card-img-top' style='max-height: 10rem; object-fit: contain' alt='profileImage'>
+                        <img src=". $profileImage ." class='card-img-top cardProfileImage' alt='profileImage'>
                         <div class='card-body'>
                         <h5>@$un</h5>
                     ";

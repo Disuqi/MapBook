@@ -39,7 +39,7 @@ body{
     width: 400px;
 }
 .copyright{
-    position: absolute;
+    position: fixed;
     font-size: 15px;
     bottom: 0;
     right: 0;
@@ -83,7 +83,6 @@ body{
 
 .userCard{
     width: 18rem;
-    min-width: 200px;
     margin: 10px;
 }
 
@@ -94,7 +93,6 @@ body{
 }
 .linker:hover,
 .linker:focus{
-    font-size: 18px;
     color: paleturquoise;
 }
 
@@ -115,5 +113,14 @@ body{
 }
 .centered:hover{
     filter: opacity(85%);
+}
+
+.cardProfileImage{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-height: 12rem;
+    object-fit: contain;
+    background-color: gray;
 }
 

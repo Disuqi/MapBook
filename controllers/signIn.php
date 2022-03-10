@@ -44,16 +44,6 @@ if(isset($_POST['submit'])){
     }
 
 }
-
-//changing the stay signed in button depending on cookies permission
 $view->staySignedIn = null;
-if(isset($_COOKIE['allowCookies'])){
-    $view->staySignedIn = '<input type="checkbox" name="staySignedIn" class="btn-check" id="btncheck1" autocomplete="off">
-                              <label class="btn btn-outline-dark form-control" for="btncheck1">Stay signed in</label>';
-}
-else{
-    $view->staySignedIn =  '<a data-toggle="tooltip" title="Allow cookies for this feature"><label class="btn btn-outline-dark form-control" data-bs-toggle="modal" data-bs-target="#cookiesModal">Stay signed in</label></a>';
-}
-
 
 require_once("../views/signIn.phtml");

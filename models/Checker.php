@@ -99,6 +99,7 @@ class Checker{
      * @param string $oldPassword old password of existing user, default = null
      * @return string code depending on the problem, and null if there is no problem
      */
+    //Enums
     public function checkPassword($password1, $password2, $username = null, $oldPassword = null){
         if($password1 == ""){
             return "NP"; //No password

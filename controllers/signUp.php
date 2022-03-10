@@ -51,7 +51,7 @@ if(isset($_POST['submit'])){
             $view->validation = "The password is too short";
             break;
         case "EP":
-            $view->validation = "The password is too simple<br>Try adding special characters";
+            $view->validation = "The password is too simple Try adding special characters";
             break;
         case "NM":
             $view->validation = "The passwords do not match";
