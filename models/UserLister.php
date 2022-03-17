@@ -183,7 +183,7 @@ class UserLister{
         foreach ($users as $user){
             //get username
             $un = $user->getUsername();
-            //get profile image
+            //get profile image$
             $prImageDTO = $this->imagesRepo->getProfileImage($un);//profile image dto
             //get logged in user username
             $loggedUn = isset($_SESSION['username'])? $_SESSION['username'] : "";

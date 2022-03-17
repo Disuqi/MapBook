@@ -1,7 +1,7 @@
 <?php
 class UserDTO{
 
-    protected $_username, $_firstName, $_lastName, $_email, $_password, $_lat, $_lng;
+    protected $_username, $_firstName, $_lastName, $_email, $_password, $_lat, $_lng, $_friendship, $_profileImage;
 
 
     public function __construct($dbRow){
@@ -13,6 +13,8 @@ class UserDTO{
         $this->_password = $dbRow['password'];
         $this->_lat = $dbRow['lat'];
         $this->_lng = $dbRow['lng'];
+        $this->_friendship = null;
+        $this->_profileImage = "../images/noProfilePic.svg";
     }
 
     //getter methods
@@ -32,6 +34,9 @@ class UserDTO{
     public function getEmail(){
         return $this->_email;
     }
+    public function getFriendship(){
+        return $this->_friendship;
+    }
     public function getPassword(){
         return $this->_password;
     }
@@ -41,10 +46,21 @@ class UserDTO{
     public function getLng(){
         return $this->_lng;
     }
-
+    public function getProfileImage(){
+        return $this->_profileImage;
+    }
     public function getPosition(){
         return "($this->_lat, $this->_lng)";
     }
+
+
+    public function setProfileImage($profileImage){
+        $this->_profileImage = $profileImage;
+    }
+    public function setFriendship($friendship){
+        $this->_friendship = $friendship;
+    }
+
 
     //converting to all the values into an array
     public function toArray(){

@@ -1,36 +1,58 @@
 <?php
 //checks if the user is seaching for something
+require_once "../models/UsersRepo.php";
+require_once "../models/FriendshipRepo.php";
+require_once "../models/ImagesRepo.php";
+
+$usersRepo = new UsersRepo();
+$imagesRepo = new ImagesRepo();
+$friendshipRepo = new FriendshipRepo();
+
 if(isset($_GET['search'])){
     if(isset($_SESSION['loggedIn']))
     {
+        $un = $_SESSION['username'];
         switch($_GET['search']){
             case 'friends'://looking for friends
-                $users = $userLister->getFriends($_SESSION['username']);
-                $view->usersList = $users == null? "<div style='margin-top: 80px; margin-left: 20px'><i class='m-2 bi bi-emoji-frown' style='font-size: 25px'> No Friends</i></div>" :  $users;
+                $view->title = "Friends";
+                $view->usersList = $usersRepo->getAllStatusCode("A", $un);
                 break;
             case 'requests'://looking for all the friend requests
-                $users = $userLister->getAllRequests($_SESSION['username']);
-                $view->usersList = $users == null? "<div style='margin-top: 80px; margin-left: 20px'><i class='m-2 bi bi-inbox-fill' style='font-size: 25px'> No Pending Requests</i></div>" :  $users;
+                $view->title = "Requests";
+                $view->usersList = $usersRepo->getAllStatusCode("R", $un);
                 break;
             case 'declined'://looking for declined requests
-                $users= $userLister->getAllDeclined($_SESSION['username']);
-                $view->usersList = $users == null? "<div style='margin-top: 80px; margin-left: 20px'><i class='m-2 bi bi-inbox-fill' style='font-size: 25px'> No Declined Requests</i></div>" :  $users;
+                $view->title = "Declined";
+                $view->usersList = $usersRepo->getAllStatusCode("D", $un);
                 break;
             case ''://not looking for anything so just show all users
-                $view->usersList = '<h1 style="margin-top: 80px; margin-left: 20px">All Users</h1>';
-                $users = $userLister->getAllUsers();
-                $view->usersList .= $users == null ? "<div style='margin-top: 40px; margin-left: 20px'><i class='m-2 bi bi-inbox-fill' style='font-size: 25px'> No Users</i></div>" : $users;
+                $view->title = "All Users";
+                $view->usersList = $usersRepo->getPageOfUsers(0);
                 break;
             default:
-                $searchResult = $userLister->search($_GET['search']);//searching for something specific
-                $view->usersList = $searchResult == null? "<div style='margin-top: 80px; margin-left: 20px'><i class='m-2 bi bi-search' style='font-size: 25px'> No Users Found</i></div>" : $searchResult;
+                $view->title = "You searched for \"" . $_GET['search'] ."\"";
+                $view->usersList = $usersRepo->search($_GET['search']);
                 break;
-        }}else{//anonymous search if not loggedin
-        $searchResult = $userLister->anonymousSearch($_GET['search']);
-        $view->usersList = $searchResult == null? "<div style='margin-top: 80px; margin-left: 20px'><i class='m-2 bi bi-search' style='font-size: 25px'> No Users Found</i></div>" : $searchResult;
+        }
+    }else{//anonymous search if not loggedin
+            $view->title = "You searched for \"" . $_GET['search'] ."\"";
+            $view->usersList = $usersRepo->search2($_GET['search']);
     }
 }else {
     //if he is not searching for something then display all the registered users
-    $view->usersList = '<h1 style="margin-top: 80px; margin-left: 20px">All Users</h1>';
-    $view->usersList .= $userLister->getPageOfUsers($currentPage);
+    $view->title = "All Users";
+    $view->usersList = $usersRepo->getPageOfUsers($currentPage);
 }
+
+foreach($view->usersList as $user){
+    $imageDto = $imagesRepo->getProfileImage($user->getUsername());
+    if($imageDto != null){
+        $user->setProfileImage($imageDto->getImagePath());
+    }
+    if(isset($_SESSION['loggedIn'])){
+        $friendship = $friendshipRepo->areFriends(["requesterId" => $_SESSION['username'], "addresseeId" => $user->getUsername()]);
+        $user->setFriendship($friendship);
+    }
+}
+
+

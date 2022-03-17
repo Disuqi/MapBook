@@ -2,7 +2,87 @@
 ?>
 <div>
     <?php
-    echo $view->usersList;
+    echo "<div style='margin-top: 80px; margin-left: 20px;'><h2>".$view->title."</h2></div>";
+    $usersCards = "<div class='row justify-content-start  m-0'>";
+    foreach($view->usersList as $user){
+        $un = $user->getUsername();
+        $profileImage = $user->getProfileImage();
+        $loggedUn = isset($_SESSION['username'])? $_SESSION['username'] : "";
+        if(strcasecmp($loggedUn, $un) == 0) continue;
+        $usersCards .= "
+                    <div class='card userCard'>
+                        <img src=". $profileImage ." class='card-img-top cardProfileImage' alt='profileImage'>
+                        <div class='card-body'>
+                        <h5>@$un</h5>
+                    ";
+        if($loggedUn != ""){
+            $usersCards.="
+                                <h6 class='card-subtitle text-muted'>Name</h6>
+                                <p>".$user->getFullName()."</p>
+                                <h6 class='card-subtitle text-muted'>Email</h6>
+                                <p>".$user->getEmail()."</p>
+                                <h6 class='card-subtitle text-muted'>Position</h6>
+                                <p>".$user->getPosition()."</p>
+                                <div class='d-flex  align-items-center justify-content-center text-center'>
+                                ";
+
+            $friendship = $user->getFriendship();
+            //if they are friends then store all the necessary values in variables later used
+            $requester = ($friendship)?$friendship->getRequesterId() : null;
+            $addressee = ($friendship)?$friendship->getAddresseeId() : null;
+            $statusCode = ($friendship)?$friendship->getStatusCode() : null;
+            //checking if the logged user is also the requester
+            $requesterIsLogged =  ($friendship)?strcasecmp($requester, $loggedUn) == 0 : null;
+
+            switch($statusCode){
+                    case 'R'://requested friendship
+                        //if the logged user is also the requester then add the necessary buttons to edit friendship
+                        if($requesterIsLogged){
+                            $usersCards .= "<a class='btn btn-primary disabled'>Requested</a>
+                                <a class='btn btn-outline-danger' href='".generateLink('cancel', $requester, $addressee)."'><i class='bi bi-person-x-fill'></i> Cancel</a>";
+                        }else{//if the logged user is not the requester then add the necessary buttons to edit friendship
+
+                            $usersCards .= "<a class='btn btn-outline-success' href='".generateLink('accept', $requester, $addressee)."'><i class='bi bi-person-check-fill'></i> Accept</a>
+                                <a class='btn btn-outline-danger' href='".generateLink('decline', $requester, $addressee)."'><i class='bi bi-person-x-fill'></i>  Decline</a>
+                                ";
+
+                        }
+                        break;
+                    case 'A'://accepted friendship (They are friends)
+
+                        $usersCards .= "
+                                <a class='btn btn-success disabled'>Friends <i class='bi bi-heart-fill'></i></a>
+                                <a class='btn btn-outline-danger' href='".generateLink('cancel', $requester, $addressee)."'><i class='bi bi-person-x-fill'></i> Remove</a>
+                            ";
+                        break;
+                case 'D'://decline friendship
+
+                    $usersCards .= "<a class='btn btn-dark disabled'><i class='bi bi-x'></i>  Declined </a>
+                        ";
+                    if(!$requesterIsLogged){
+
+                        $usersCards .= "<a class='btn btn-outline-primary' href='".generateLink('add2', $addressee, $requester)."'><i class='bi bi-person-plus-fill'></i> Add</a>";
+                    }
+                    break;
+                case null://no friendship
+                    $usersCards .= "<a class='btn btn-outline-primary' href='".generateLink('add', $loggedUn, $user->getUsername())."'><i class='bi bi-person-plus-fill'></i> Add</a>";
+                    break;
+            }
+
+            $usersCards .= "</div>";
+        }
+
+        $usersCards .= "</div></div>";
+    }
+    echo $usersCards;
+
+    function generateLink($action, $requester, $addressee){
+        $base = "index.php?";
+        if(isset($_GET['search'])){
+            $base.= "search=".$_GET['search']."&";
+        }
+        return $base .= "friends=$action&requester=$requester&addressee=$addressee";
+    }
     ?>
 </div>
 <div>
