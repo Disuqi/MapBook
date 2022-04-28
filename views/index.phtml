@@ -75,7 +75,7 @@
         let container = document.getElementById("usersContainer");
 
         window.onscroll = function() {
-            if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight) {
+            if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight && !document.URL.includes("search")) {
                 loadMoreUsers();
             }
         }
