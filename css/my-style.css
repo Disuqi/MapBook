@@ -1,5 +1,11 @@
 .navbar{
     height: 70px;
+    position: sticky;
+    width: 100%;
+    top: 0px;
+    z-index: 1;
+    margin: 0px;
+    padding: 0px;
 }
 #searchBox{
     text-align: center;
@@ -55,14 +61,18 @@ body{
 }
 
 .account{
-    height: 50px;
-    width: 50px;
+    height: 45px;
+    width: 45px;
     border-radius: 100%;
     border-style: none;
     background-size: cover;
     background-color: #f8f8f8;
     background-position: center;
     background-repeat: no-repeat;
+}
+.account:hover,
+.account:focus{
+    filter: brightness(80%);
 }
 
 #cookieBtn{
@@ -87,7 +97,6 @@ body{
 }
 
 .linker{
-    margin-right: 0.25rem;
     color: white;
     transition: 0.2s ease-out;
 }
@@ -124,3 +133,14 @@ body{
     background-color: gray;
 }
 
+.w-200{
+    width: 200px;
+}
+.w-250{
+    width: 250px;
+}
+
+#map{
+    width: 100%;
+    height: calc(100vh - 70px);
+}

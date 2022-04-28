@@ -3,13 +3,18 @@
     <div class="signingForm">
         <form action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
             <div class="cl-12 text-center mt-5">
-                <h2>Assignment</h2>
+                <img src="../images/x-diamond-fill.svg">
             </div>
             <div class="mx-5">
                 <div class="col-12 text-center">
                     <p style="color: red">
                         <?php
-                            echo $view->validation;
+                            if(isset($view->validation)){
+                                echo $view->validation;
+                            }else{
+                                echo "<br>";
+                            }
+
                         ?>
                     </p>
                 </div>

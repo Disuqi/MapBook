@@ -1,9 +1,18 @@
 <footer>
     <p lang="en-GB" class="copyright">copyright © All rights reserved</p>
 </footer>
+<?php
+if(!isset($_SESSION["doNotAllowCookies"]) && !isset($_COOKIE["allowCookies"])){
+    echo '
+        <div class="m-2 col-1 text-start copyright" style="z-index: 1; left: 0px">
+            <button id="cookieBtn" data-bs-toggle="modal" data-bs-target="#cookiesModal"></button>
+        </div>';
+    require_once("../views/template/cookie.phtml");
+}
+?>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!-- BootStrap JS -->
 <script src="/js/bootstrap.js"></script>
-<?php
-require_once("../views/template/cookie.phtml");
+</body>
+</html>

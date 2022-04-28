@@ -2,13 +2,18 @@
 <div class="signUpContainer d-flex align-items-center justify-content-center">
     <div class="signingForm signUp">
         <form enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
-            <div class="cl-12 text-center mt-3">
-                <h2>Assignment</h2>
+            <div class="cl-12 text-center mt-3 mb-2">
+                <img src="../images/x-diamond-fill.svg">
             </div>
             <div class='m-0 col-12 text-center'>
                 <p style="color: red">
                     <?php
-                        echo "$view->validation";
+                        if(isset($view->validation)){
+                            echo $view->validation;
+                        }
+                        else{
+                            echo "<br><br>";
+                        }
                     ?>
                 </p>
             </div>
@@ -36,7 +41,17 @@
                     <label class="form-check-label">
                         Press the button at position <?php echo $view->numToPress; ?>
                     </label>
-                    <?php echo $view->captcha; ?>
+                    <?php
+                    echo '<div class="btn-group" role="group" aria-label="Captcha radio toggle button group">';
+
+                    for($i = 0; $i <count($view->ranNumArray); $i++){
+                        echo '  
+                                      <input type="radio" class="btn-check" name="captcha"  value="'.$view->ranNumArray[$i].'" id="btnradio'.$i.'" autocomplete="off">
+                                      <label class="btn btn-outline-primary" for="btnradio'.$i.'">'.$view->ranNumArray[$i].'</label>';
+
+                    }
+                    echo '</div>';
+                    ?>
                 </div>
                 <div class="mb-3">
                     <button type="submit" name="submit" class="btn form-control signUpBtn">Sign Up</button>

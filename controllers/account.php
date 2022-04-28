@@ -1,25 +1,12 @@
 <?php
-if(session_id() == ''){
-    session_start();
-}
-$view = new stdClass();
-$view->pageTitle = 'Account';
+require_once "init.php";
 
 //if logged in then show account settings
 if(isset($_SESSION['loggedIn'])){
-    require_once '../models/UsersRepo.php';
-    require_once '../models/ImagesRepo.php';
-
-    $usersRepo = new UsersRepo();
-    $imageRepo = new ImagesRepo();
     $un = $_SESSION['username'];
     $view->validation = "<span class='link-secondary disabled mt-1'>Account Settings <i class='bi bi-gear-wide-connected'></i></span>";
-    //chekcking if the user is trying to change something and making relevant checks and changes
+    //checking if the user is trying to change something and making relevant checks and changes
     if(isset($_POST['Submit'])){
-        require_once '../models/Checker.php';
-        require_once '../models/Images.php';
-        $checker = new Checker();
-        $imageHandler = new Images();
         $validation = "OK";
         $attribute = "";
         $value = "";
@@ -50,30 +37,30 @@ if(isset($_SESSION['loggedIn'])){
             }else {
                 $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
                 $_SESSION['profileImage'] = "../images/" . $un . '/1.' . $ext;
-                if($imageRepo->getProfileImage($un) == null) {
-                    $imageRepo->addObject(["username" => $un, "ext" => $ext]);
-                    $imageRepo->setProfileImage(["id"=>1, "username" => $un]);
+                if($imagesRepo->getProfileImage($un) == null) {
+                    $imagesRepo->addObject(["username" => $un, "ext" => $ext]);
+                    $imagesRepo->setProfileImage(["id"=>1, "username" => $un]);
                 }
             }
 
         } else if($_POST['Submit'] == 'delete'){
             $validation = "PI";
             $pk = ['id'=> 1, 'username' => $un];
-            $ext = $imageRepo->getAttribute('ext', $pk);
+            $ext = $imagesRepo->getAttribute('ext', $pk);
             $imageHandler->deleteImage($un, 1, $ext);
-            $imageRepo->deleteObject($pk);
+            $imagesRepo->deleteObject($pk);
             $_SESSION['profileImage'] = '../images/noProfilePic.svg';
         }
         //checking if there was something wrong with the input and setting the message sent to the user
         switch($validation){
             case "IU":
-                $view->validation .= "Invalid Username <i class='bi bi-x-circle-fill'></i></span>";
+                $view->validation .= "Invalid Username<i class='bi bi-x-circle-fill'></i></span>";
                 break;
             case "EU":
-                $view->validation .= "The Username is already in use <i class='bi bi-x-circle-fill'></i></span>";
+                $view->validation .= "The Username is already in use<i class='bi bi-x-circle-fill'></i></span>";
                 break;
             case "IE":
-                $view->validation .= "Invalid Email <i class='bi bi-x-circle-fill'></i></span>";
+                $view->validation .= "Invalid Email<i class='bi bi-x-circle-fill'></i></span>";
                 break;
             case "EE":
                 $view->validation .= "The email is already in use <i class='bi bi-x-circle-fill'></i></span>";
@@ -116,7 +103,7 @@ if(isset($_SESSION['loggedIn'])){
                 if($attribute == 'username'){
                     $imageHandler->renameDirectory($un, $value);
                     $_SESSION['username'] = $value;
-                    $profileImage = $imageRepo->getProfileImage($value);
+                    $profileImage = $imagesRepo->getProfileImage($value);
                     if($profileImage != null){
                         $profileImage = $profileImage->getImagePath();
                     }else{
@@ -125,13 +112,13 @@ if(isset($_SESSION['loggedIn'])){
                     $_SESSION['profileImage'] = $profileImage;
                     $un = $value;
                 }
-                $view->validation = "<span class='btn btn-outline-success disabled mt-1'>".ucfirst($attribute). " Changed <i class='bi bi-check-circle-fill'></i></span>";
+                $view->validation = "<span class='btn btn-outline-success disabled mt-1'>" . ucfirst($attribute) . " Changed <i class='bi bi-check-circle-fill'></i></span>";
                 break;
         }
     }
     //Making the view, basically making the html code, that changes according to the buttons pressed
     $user = $usersRepo->getObject($un);
-    $profileImage = $imageRepo->getProfileImage($un);
+    $profileImage = $imagesRepo->getProfileImage($un);
     if($profileImage != null){
         $view->profileImage = $profileImage->getImagePath();
     }else{
@@ -175,7 +162,7 @@ if(isset($_SESSION['loggedIn'])){
                 ';
             }else{
                 $view->information .= '
-                        <p class="card-text">'.$value.'</p>
+                        <p class="card-text">' . $value . '</p>
                     </div>
                     <a type="button" class="btn btn-outline-secondary order-2" href="account.php?change='.$key.'"><i class="bi bi-pencil-fill"></i></a>';
             }

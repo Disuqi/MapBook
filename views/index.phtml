@@ -2,27 +2,25 @@
 ?>
 <div>
     <?php
-    echo "<div style='margin-top: 80px; margin-left: 20px;'><h2>".$view->title."</h2></div>";
-    $usersCards = "<div class='row justify-content-start  m-0'>";
+    echo "<div class='d-flex justify-content-center align-items-center mt-1'><h2>".$view->title."</h2></div>";
+    echo "<div style='margin-inline: 20vw;' class='row justify-content-center' id='usersContainer'>";
     foreach($view->usersList as $user){
         $un = $user->getUsername();
         $profileImage = $user->getProfileImage();
         $loggedUn = isset($_SESSION['username'])? $_SESSION['username'] : "";
         if(strcasecmp($loggedUn, $un) == 0) continue;
-        $usersCards .= "
+        echo "
                     <div class='card userCard'>
                         <img src=". $profileImage ." class='card-img-top cardProfileImage' alt='profileImage'>
                         <div class='card-body'>
                         <h5>@$un</h5>
                     ";
         if($loggedUn != ""){
-            $usersCards.="
+            echo "
                                 <h6 class='card-subtitle text-muted'>Name</h6>
                                 <p>".$user->getFullName()."</p>
                                 <h6 class='card-subtitle text-muted'>Email</h6>
                                 <p>".$user->getEmail()."</p>
-                                <h6 class='card-subtitle text-muted'>Position</h6>
-                                <p>".$user->getPosition()."</p>
                                 <div class='d-flex  align-items-center justify-content-center text-center'>
                                 ";
 
@@ -38,57 +36,143 @@
                     case 'R'://requested friendship
                         //if the logged user is also the requester then add the necessary buttons to edit friendship
                         if($requesterIsLogged){
-                            $usersCards .= "<a class='btn btn-primary disabled'>Requested</a>
-                                <a class='btn btn-outline-danger' href='".generateLink('cancel', $requester, $addressee)."'><i class='bi bi-person-x-fill'></i> Cancel</a>";
+                            echo "<a class='btn btn-primary disabled m-1'>Requested</a>
+                                <a class='btn btn-outline-danger m-1' href='".generateLink('cancel', $requester, $addressee)."'><i class='bi bi-person-x-fill'></i> Cancel</a>";
                         }else{//if the logged user is not the requester then add the necessary buttons to edit friendship
 
-                            $usersCards .= "<a class='btn btn-outline-success' href='".generateLink('accept', $requester, $addressee)."'><i class='bi bi-person-check-fill'></i> Accept</a>
-                                <a class='btn btn-outline-danger' href='".generateLink('decline', $requester, $addressee)."'><i class='bi bi-person-x-fill'></i>  Decline</a>
+                            echo "<a class='btn btn-outline-success m-1' href='".generateLink('accept', $requester, $addressee)."'><i class='bi bi-person-check-fill'></i> Accept</a>
+                                <a class='btn btn-outline-danger m-1' href='".generateLink('decline', $requester, $addressee)."'><i class='bi bi-person-x-fill'></i>  Decline</a>
                                 ";
 
                         }
                         break;
                     case 'A'://accepted friendship (They are friends)
-
-                        $usersCards .= "
-                                <a class='btn btn-success disabled'>Friends <i class='bi bi-heart-fill'></i></a>
-                                <a class='btn btn-outline-danger' href='".generateLink('cancel', $requester, $addressee)."'><i class='bi bi-person-x-fill'></i> Remove</a>
+                        echo "
+                                <a class='btn btn-success disabled m-1'>Friends <i class='bi bi-heart-fill'></i></a>
+                                <a class='btn btn-outline-danger m-1' href='".generateLink('cancel', $requester, $addressee)."'><i class='bi bi-person-x-fill'></i> Remove</a>
                             ";
                         break;
                 case 'D'://decline friendship
-
-                    $usersCards .= "<a class='btn btn-dark disabled'><i class='bi bi-x'></i>  Declined </a>
-                        ";
                     if(!$requesterIsLogged){
-
-                        $usersCards .= "<a class='btn btn-outline-primary' href='".generateLink('add2', $addressee, $requester)."'><i class='bi bi-person-plus-fill'></i> Add</a>";
+                        echo "<a class='btn btn-outline-primary m-1' href='".generateLink('add2', $addressee, $requester)."'><i class='bi bi-person-plus-fill'></i> Add</a>";
                     }
+                    echo "<a class='btn btn-dark disabled m-1'><i class='bi bi-x'></i> Declined </a>
+                        ";
                     break;
                 case null://no friendship
-                    $usersCards .= "<a class='btn btn-outline-primary' href='".generateLink('add', $loggedUn, $user->getUsername())."'><i class='bi bi-person-plus-fill'></i> Add</a>";
+                    echo "<a class='btn btn-outline-primary' href='".generateLink('add', $loggedUn, $user->getUsername())."'><i class='bi bi-person-plus-fill'></i> Add</a>";
                     break;
             }
 
-            $usersCards .= "</div>";
+            echo "</div>";
         }
 
-        $usersCards .= "</div></div>";
+        echo "</div></div>";
     }
-    echo $usersCards;
+    ?>
+    <script type="text/javascript">
+        let currentPage = 0;
+        let container = document.getElementById("usersContainer");
 
-    function generateLink($action, $requester, $addressee){
-        $base = "index.php?";
-        if(isset($_GET['search'])){
-            $base.= "search=".$_GET['search']."&";
+        window.onscroll = function() {
+            if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight) {
+                loadMoreUsers();
+            }
         }
-        return $base .= "friends=$action&requester=$requester&addressee=$addressee";
-    }
-    ?>
-</div>
-<div>
-    <?php
-    echo $view->pagination;
-    ?>
+
+        function loadMoreUsers(){
+            currentPage+=1;
+
+            let users;
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", "../controllers/loadMoreUsers.php?page=" + currentPage);
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        users = JSON.parse(xhr.responseText).users;
+                        addUserCards(users);
+                    } else {
+                        console.log("Error: " + xhr.status);
+                    }
+                }
+            }
+
+            xhr.send(null);
+        }
+
+        function addUserCards(users){
+            let loggedIn = "<?php echo isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true? $_SESSION['username'] : "";?>";
+            for(let i = 0; i < users.length; i++){
+                let user = users[i];
+                let html = "";
+                if(loggedIn == user.username) continue;
+
+                html += "<div class='card userCard'>" +
+                    "<img src='"+ user.profileImage +"' class='card-img-top cardProfileImage' alt='profileImage'/>" +
+                    "<div class='card-body'><h5>@" + user.username + "</h5>";
+
+                if(loggedIn != ""){
+                    html += "<h6 class='card-subtitle text-muted'>Name</h6><p>" + user.firstName + " " + user.lastName + "</p>" +
+                        "<h6> <h6 class='card-subtitle text-muted'>Email</h6><p>" + user.email + "</p>" +
+                        "<div class='d-flex  align-items-center justify-content-center text-center' id='"+user.username+"' >";
+                    switch(user.statusCode){
+                        case 'R':
+                            if(loggedIn == user.requester){
+                                html += "<a class='btn btn-primary disabled m-1'>Requested</a>" +
+                                "<a class='btn btn-outline-danger m-1' href='" + generateLink('cancel', user.requester, user.addressee) + "'><i class='bi bi-person-x-fill'></i> Cancel</a>";
+                            }else{
+                                html += "<a class='btn btn-outline-success m-1' href='"+generateLink('accept', user.requester, $addressee)+"'><i class='bi bi-person-check-fill'></i> Accept</a>" +
+                                "<a class='btn btn-outline-danger m-1' href='"+generateLink('decline', user.requester, user.addressee)+"'><i class='bi bi-person-x-fill'></i>  Decline</a>";
+                            }
+                            break;
+                        case 'A':
+                            html += "<a class='btn btn-success disabled m-1'>Friends <i class='bi bi-heart-fill'></i></a>"+
+                                "<a class='btn btn-outline-danger m-1' href='"+generateLink('cancel', user.requester, user.addressee)+"'><i class='bi bi-person-x-fill'></i> Remove</a>"
+                            break;
+                        case 'D':
+                            if(user.requester != loggedIn){
+                                html += "<a class='btn btn-outline-primary m-1' href='"+generateLink('add2', user.addressee, user.requester)+"'><i class='bi bi-person-plus-fill'></i> Add</a>";
+                            }
+                            html += "<a class='btn btn-dark disabled m-1'><i class='bi bi-x'></i> Declined </a>";
+                            break;
+                        default:
+                            html += "<button class='btn btn-outline-primary' onclick=\"friendship('add', '"+loggedIn+"', '"+user.username+"', '"+loggedIn+"')\" ><i class='bi bi-person-plus-fill'></i> Add</button>";
+                            break;
+                    }
+                    html += "</div>";
+                }
+                html += "</div></div>";
+                container.innerHTML += html;
+            }
+        }
+
+        function generateLink(action, requester, addressee){
+            let base = "index.php?";
+            let getSearch = "<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>"
+            if(getSearch != ''){
+                base += "search=" + getSearch + "&";
+            }
+            return base + "friends=" + action + "&requester=" + requester + "&addressee=" + addressee;
+        }
+
+
+        function friendship(action, requester, addressee, loggedUn){
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", "../controllers/friendship.php?friends=" + action + "&requester=" + requester + "&addressee=" + addressee);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        document.getElementById(addressee).innerHTML = "<button class='btn btn-primary disabled'>Requested</button>"
+                    } else {
+                        console.log("Error: " + xhr.status);
+                    }
+                }
+            }
+            xhr.send(null);
+        }
+    </script>
 </div>
 <?php
 require('template/footer.phtml');

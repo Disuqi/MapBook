@@ -1,30 +1,75 @@
 <?php require_once("head.phtml") ?>
-<body role="document">
-<div class="navbar navbar-dark bg-dark" style="position: fixed; width: 100%; top: 0px; z-index: 1" >
-    <div class="d-flex col-12 flex-nowrap justify-content-between">
-        <div class="p-2 col-4">
-            <a class="navbar-brand" href="../../controllers/index.php"><img src="/images/wavingHand.png" alt="icon" width="30" height="30" class="d-inline-block align-text-top">Assignment</a>
+<div class="navbar navbar-dark bg-dark">
+    <div class="d-flex col-12 justify-content-evenly">
+        <div class="d-inline-flex align-items-center w-250">
+            <a class="navbar-brand" href="../../controllers/index.php" style="color: paleturquoise; font-weight: bolder"><i class="bi bi-x-diamond-fill m-1"></i>MyFriends</a>
             <?php
-                echo '<a class="text-decoration-none fw-bold m-2 linker" href="../../controllers/index.php"><i class="bi bi-person-lines-fill"></i> Home</a>';
                 if(isset($_SESSION['loggedIn'])){
-                    echo '<a class="text-decoration-none fw-bold m-2 linker" href="../../controllers/index.php?search=friends"><i class="bi bi-heart-fill"></i> Friends</a>';
-                    echo '<a class="text-decoration-none fw-bold m-2 linker" href="../../controllers/index.php?search=requests"><i class="bi bi-send-fill"></i> Requests</a>';
-                    echo '<a class="text-decoration-none fw-bold m-2 linker"  href="../../controllers/index.php?search=declined"><i class="bi bi-slash-circle-fill"></i> Declined</a>';
+                    echo '<div class="dropdown dropend">
+                          <a class="linker" style="font-size: 30px;" type="button" id="pageListDropDown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-list"></i>
+                          </a>
+                          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="pageListDropDown">
+                            <li><a class="dropdown-item text-decoration-none fw-bold linker" href="../../controllers/index.php"><i class="bi bi-person-lines-fill"></i> Home</a></li>
+                            <li><a class="dropdown-item text-decoration-none fw-bold linker" href="../../controllers/index.php?search=friends"><i class="bi bi-heart-fill"></i> Friends</a></li>
+                            <li><a class="dropdown-item text-decoration-none fw-bold linker" href="../../controllers/index.php?search=requests"><i class="bi bi-send-fill"></i> Requests</a></li>
+                            <li><a class="dropdown-item text-decoration-none fw-bold linker"  href="../../controllers/index.php?search=declined"><i class="bi bi-slash-circle-fill"></i> Declined</a></li>
+                            <li><a class="dropdown-item text-decoration-none fw-bold linker" href="../../controllers/map.php"><i class="bi bi-geo-alt-fill"></i> Map</a></li>
+                          </ul>
+                        </div>';
+                }else{
+                    echo '<a class="text-decoration-none fw-bold linker" href="../../controllers/index.php"><i class="bi bi-person-lines-fill"></i> Home</a>';
                 }
             ?>
         </div>
-        <div class="p-2 col-2">
+        <div class="w-200 d-inline-flex align-items-center justify-content-center">
             <form action="../../controllers/index.php">
                 <input class="form-control" id="searchBox" type="search"  name="search" placeholder="Search" aria-label="Search">
                 <button style="display: none" type="submit"></button>
             </form>
         </div>
-        <div class="col-4 text-end">
+        <div class="text-start w-250 d-inline-flex align-items-center justify-content-end">
             <?php
-                echo $view->signInBtn;
+            if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']){
+                $requestsHTML = "";
+                if(!isset($view->requests) || $view->requests == null){
+                    $requestsHTML = "<li class='listItem'>No Requests<i style='font-size: 20px' class='bi bi-inbox-fill mx-2'></i></li>";
+                }
+                foreach($view->requests as $rq){
+                    $un = $rq->getUsername();
+                    $loggedUn = $_SESSION['username'];
+                    $requestsHTML .= "<li class='listItem d-flex align-items-center justify-content-end w-auto mx-3'>$un 
+                    <a class='btn btn-outline-success mx-2' href='".generateLink('accept', $un, $loggedUn)."'><i class='bi bi-person-check-fill'></i></a>
+                            <a class='btn btn-outline-danger' href='".generateLink('decline', $un, $loggedUn)."'><i class='bi bi-person-x-fill'></i></a>
+                    </li>";
+                }
+                echo '<div class="d-flex justify-content-end align-items-center">
+                            <div class="dropdown dropstart">
+                              <i style="font-size: 30px" class="btn linker bi bi-people-fill" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                              <ul class="dropdown-menu dropdown-menu-dark text-end" style="right: calc(50px + 0.4vw)" aria-labelledby="account">
+                                '. $requestsHTML.'
+                              </ul>
+                            </div>
+                            <div class="dropdown dropstart">
+                              <button class="btn account" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-image: url(' . $_SESSION['profileImage'] . ');"></button>
+                              <ul class="dropdown-menu dropdown-menu-dark text-end" style="right: calc(50px + 0.4vw)" aria-labelledby="account">
+                                <li class="dropdown-item disabled">@'.$_SESSION['username'].'</li>
+                                <li><a class="dropdown-item" href="account.php">Account Settings <i class="bi bi-gear-wide-connected"></i></a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="../../controllers/index.php?account=signOut">Sign out <i class="bi bi-box-arrow-right"></i></a></li>
+                              </ul>
+                            </div>
+                        </div>';
+            } else{
+                echo '
+                        <div class="p-1 btn-group">
+                                <a class="btn signInBtn" href="signIn.php" >Sign In</a>
+                                <a class="btn signInBtn dropdown-toggle-split" href="signUp.php">Up</a>
+                        </div>
+                    ';
+            }
             ?>
         </div>
     </div>
 </div>
 </nav>
-</body>

@@ -1,0 +1,161 @@
+<?php require('template/header.phtml');
+?>
+<div id="map" style="width: 100%; height: calc(100vh - 70px)">
+</div>
+<script type="text/javascript">
+    let xhr = new XMLHttpRequest();
+    let friends = [], map = null;
+    let myLat = 0, myLng = 0;
+    let secondXhr = new XMLHttpRequest();
+    let myMarker = null;
+    let markers = null;
+    //setTimeout(updateMarkers, 10000);
+
+    xhr.open("GET", "../controllers/getFriends.php");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                friends = JSON.parse(xhr.responseText).friends;
+                if(markers == null){
+                    markers = {};
+                    makeFriendsMarkers();
+                }
+            } else {
+                console.log("Error: " + xhr.status);
+            }
+        }
+    }
+    xhr.send(null);
+
+    function setMyLocation(position){
+        let toCenter = false;
+        let latDiff = position.coords.latitude - myLat;
+        let lngDiff = position.coords.longitude - myLng;
+        if(latDiff >= 1 || lngDiff >= 1 || latDiff <= -1 || lngDiff <= -1){
+            toCenter = true;
+        }else{
+            console.log(
+                "myLat: " + myLat + "\n" +
+                "coords.lat:" + position.coords.latitude + "\n" +
+                "myLng: " + myLng + "\n" +
+                "coords.lng: " + position.coords.longitude + "\n"
+            );
+        }
+        myLat = position.coords.latitude;
+        myLng = position.coords.longitude;
+
+        if(myMarker == null){
+            map.setCenter({lat: myLat, lng: myLng});
+
+            myMarker = new google.maps.Marker({
+                position: {lat: myLat, lng: myLng},
+                map: map,
+                label: {
+                    text: "\ue7fd",
+                    fontFamily: "Material Icons",
+                    color: "white",
+                    fontSize: "15px",
+                }
+            });
+
+            const htmlContent = "" +
+                "<div class='d-flex align-items-center justify-content-center'>" +
+                "<img class='account m-2' src='<?php echo $_SESSION['profileImage']?>'>" +
+                "<h5><?php echo $_SESSION['username'] ?></h5>" +
+                "</div>";
+            const infowindow = new google.maps.InfoWindow({
+                content: htmlContent
+            });
+
+            myMarker.addListener('mouseover', () => {
+                infowindow.open(myMarker.get("map"), myMarker);
+            }, false);
+            myMarker.addListener('mouseout', () => {
+                infowindow.close();
+            }, false);
+        }else{
+            myMarker.setPosition({lat: myLat, lng: myLng});
+            if(toCenter){
+                console.log("here");
+                map.setCenter({lat: myLat, lng: myLng});
+            }
+        }
+
+        secondXhr.open("GET", "../controllers/updateLocation.php?lat=" + myLat + "&lng=" + myLng);
+        secondXhr.send(null);
+
+    }
+
+    function initMap(){
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 10,
+            center: { lat: 0, lng: 0},
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        navigator.geolocation.watchPosition(setMyLocation);
+    }
+
+    function makeFriendsMarkers(){
+        for(let i = 0; i < friends.length; i++){
+            markers[friends[i].username] = createMarker(friends[i]);
+        }
+    }
+
+    function createMarker(user){
+        let marker = new google.maps.Marker(
+            {
+                position: { lat: user.lat, lng: user.lng},
+                map: map,
+                label: {
+                    text: "\ue87d",
+                    fontFamily: "Material Icons",
+                    color: "white",
+                    fontSize: "18px",
+                }
+            }
+        );
+        //making infowindows
+        const htmlContent = "" +
+            "<div class='d-flex align-items-center justify-content-center'>" +
+            "<img class='account m-2' src='"+ user.profileImage +"'>" +
+            "<h5>" + user.username + "</h5>" +
+            "</div>";
+        const infowindow = new google.maps.InfoWindow({
+            content: htmlContent
+        });
+
+        marker.addListener('mouseover', () => {
+            infowindow.open(marker.get("map"), marker);
+        }, false);
+        marker.addListener('mouseout', () => {
+            infowindow.close();
+        }, false);
+
+        return marker;
+    }
+
+    function updateMarkers(){
+        xhr.open("GET", "../controllers/getFriends.php");
+        xhr.send(null);
+
+        for(let i = 0; i < friends.length; i++){
+            let username = friends[i].username;
+            let friendLat = friends[i].lat;
+            let friendLng = friends[i].lng;
+            if(username in markers){
+                markers[username].setPosition({lat: friendLat, lng: friendLng});
+            }else{
+                markers[username] = createMarker(friends[i]);
+            }
+        }
+
+        //setTimeout(updateMarkers, 10000);
+    }
+
+
+</script>
+<!-- Google maps api -->
+<script async defer src="https://maps.google.com/maps/api/js?key=AIzaSyD3TxuDzAKObKZ4LUi9sdpoEF9btlJFygg&callback=initMap" type="text/javascript"></script>
+<?php
+require('template/footer.phtml');

@@ -1,8 +1,7 @@
 <?php
-require_once('../models/UsersRepo.php');
-require_once('../models/FriendshipRepo.php');
-$usersRepo = new UsersRepo();
-$friendshipRepo = new FriendshipRepo();
+if(!isset($usersRepo)){
+    require_once "init.php";
+}
 $requesterId = $_GET['requester'];
 $addresseeId = $_GET['addressee'];
 $pk = ['requesterId' => $requesterId, 'addresseeId' => $addresseeId];

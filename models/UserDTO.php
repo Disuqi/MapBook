@@ -1,5 +1,6 @@
 <?php
-class UserDTO{
+require_once "JsonSerializer.php";
+class UserDTO implements JsonSerializer {
 
     protected $_username, $_firstName, $_lastName, $_email, $_password, $_lat, $_lng, $_friendship, $_profileImage;
 
@@ -57,10 +58,35 @@ class UserDTO{
     public function setProfileImage($profileImage){
         $this->_profileImage = $profileImage;
     }
+
     public function setFriendship($friendship){
         $this->_friendship = $friendship;
     }
 
+    public function toJson(){
+        $toReturn = '{
+            "username" : "'. $this->_username.'",
+            "firstName" : "'. $this->_firstName.'",
+            "lastName" : "'. $this->_lastName.'",
+            "email" : "'. $this->_email.'",
+            "lat" : '. $this->_lat.',
+            "lng" : '. $this->_lng.', ';
+
+        if($this->_friendship == null){
+            $toReturn .= '
+                "statusCode": "null",
+            ';
+        }else{
+            $toReturn .= '
+                "statusCode" : "'.$this->_friendship->getStatusCode() .'",
+                "requester" : "'.$this->_friendship->getRequesterId().'",
+                "addressee" : "'.$this->_friendship->getAddresseeId().'", 
+            ';
+        }
+
+        $toReturn .= '"profileImage" : "'. $this->_profileImage.'"}';
+        return $toReturn;
+    }
 
     //converting to all the values into an array
     public function toArray(){

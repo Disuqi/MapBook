@@ -2,10 +2,11 @@
 //files necessary for this class to function
 require_once("Database.php");
 require_once("UserDTO.php");
+require_once "ImagesRepo.php";
 require_once("Repo.php");
 class UsersRepo implements Repo
 {
-    protected $dbHandle, $dbInstance;
+    protected $dbHandle, $dbInstance, $imageRepo;
 
     //connect to database
     public function __construct(){
@@ -13,6 +14,8 @@ class UsersRepo implements Repo
         $this->dbInstance = Database::getInstance();
         //getting the connection to the database
         $this->dbHandle = $this->dbInstance->getdbConnection();
+
+        $this->imagesRepo = new ImagesRepo();
     }
 
 
@@ -122,7 +125,12 @@ class UsersRepo implements Repo
         $dataset = [];
         //filling up the array with the result gotten from executing the query
         while($row = $statement->fetch()){
-            $dataset[] = new UserDTO($row);
+            $user = new UserDTO($row);
+            $imageDto = $this->imagesRepo->getProfileImage($user->getUsername());
+            if($imageDto != null){
+                $user->setProfileImage($imageDto->getImagePath());
+            }
+            $dataset[] = $user;
         }
         //returning a list of users that match the query
         return $dataset;
@@ -353,14 +361,4 @@ class UsersRepo implements Repo
         return $this->getObjectsFromQuery($sqlQuery);
     }
 
-    /**
-     * @return int the number of pages it will have
-    */
-    public function getLastPageNumber(){
-        //counts all the users and divides them by 18 as that is the max amount of users for each page
-        $sqlQuery = 'SELECT COUNT(username)/18 FROM users';
-
-        //if the number is a decimal then it's rounded up to th nearest highest number
-        return ceil($this->executeQuery($sqlQuery)->fetch()[0]);
-    }
 }

@@ -15,13 +15,6 @@ if(isset($_GET["cookies"])){
 }
 
 //Cookies button or auto login
-if(!isset($_SESSION["doNotAllowCookies"]) && !isset($_COOKIE["allowCookies"])) {
-    echo '
-        <div class="col-1 text-start copyright" style="z-index: 1; left: 0px">
-            <button id="cookieBtn" data-bs-toggle="modal" data-bs-target="#cookiesModal"></button>
-        </div>
-';
-} else if(isset($_COOKIE['username'])){
-    $signer = new Signer();
+if(isset($_COOKIE['username'])){
     $signer->signIn($_COOKIE['username']);
 }

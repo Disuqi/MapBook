@@ -1,13 +1,5 @@
 <?php
 //checks if the user is seaching for something
-require_once "../models/UsersRepo.php";
-require_once "../models/FriendshipRepo.php";
-require_once "../models/ImagesRepo.php";
-
-$usersRepo = new UsersRepo();
-$imagesRepo = new ImagesRepo();
-$friendshipRepo = new FriendshipRepo();
-
 if(isset($_GET['search'])){
     if(isset($_SESSION['loggedIn']))
     {
@@ -34,25 +26,28 @@ if(isset($_GET['search'])){
                 $view->usersList = $usersRepo->search($_GET['search']);
                 break;
         }
-    }else{//anonymous search if not loggedin
+    }else{//anonymous search if not logged in
+        if($_GET['search'] == ""){
+            $view->title = "All Users";
+            $view->usersList = $usersRepo->getAll();
+        }else{
             $view->title = "You searched for \"" . $_GET['search'] ."\"";
             $view->usersList = $usersRepo->search2($_GET['search']);
+        }
     }
 }else {
     //if he is not searching for something then display all the registered users
     $view->title = "All Users";
-    $view->usersList = $usersRepo->getPageOfUsers($currentPage);
+    $view->usersList = $usersRepo->getPageOfUsers(0);
 }
 
 foreach($view->usersList as $user){
-    $imageDto = $imagesRepo->getProfileImage($user->getUsername());
-    if($imageDto != null){
-        $user->setProfileImage($imageDto->getImagePath());
-    }
     if(isset($_SESSION['loggedIn'])){
         $friendship = $friendshipRepo->areFriends(["requesterId" => $_SESSION['username'], "addresseeId" => $user->getUsername()]);
         $user->setFriendship($friendship);
     }
 }
+
+
 
 
