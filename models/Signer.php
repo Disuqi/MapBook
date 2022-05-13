@@ -23,6 +23,7 @@ Class Signer{
         //setting the session username and logged in to the appropriate values to let the website know that a user is logged in
         $_SESSION['loggedIn'] = true;
         $_SESSION['username'] = $un;
+        $_SESSION['loggedUser'] = $this->userRepo->getObject($un);
         //getting the profile image
         $profileImage = $this->imageRepo->getProfileImage($un);
         if($profileImage != ""){

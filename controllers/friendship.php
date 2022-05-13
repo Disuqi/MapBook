@@ -8,13 +8,10 @@ $pk = ['requesterId' => $requesterId, 'addresseeId' => $addresseeId];
 //deals with friendship requests using $_GET
 switch($_GET['friends']){
     case 'add':
-        if($usersRepo->objectExists($requesterId) && $usersRepo->objectExists($addresseeId) && $friendshipRepo->areFriends($pk) == null){
-            $friendshipRepo->addObject($pk);
-        }
-        break;
-    case 'add2':
         if($friendshipRepo->areFriends($pk) != null) {
             $friendshipRepo->deleteFriendship($pk);
+        }
+        if($usersRepo->objectExists($requesterId) && $usersRepo->objectExists($addresseeId)){
             $friendshipRepo->addObject($pk);
         }
         break;

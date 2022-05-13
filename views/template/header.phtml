@@ -2,7 +2,7 @@
 <div class="navbar navbar-dark bg-dark">
     <div class="d-flex col-12 justify-content-evenly">
         <div class="d-inline-flex align-items-center w-250">
-            <a class="navbar-brand" href="../../controllers/index.php" style="color: paleturquoise; font-weight: bolder"><i class="bi bi-x-diamond-fill m-1"></i>MyFriends</a>
+            <a class="navbar-brand" href="../../controllers/index.php" style="color: turquoise; font-weight: bolder"><i class="bi bi-x-diamond-fill m-1"></i>MyFriends</a>
             <?php
                 if(isset($_SESSION['loggedIn'])){
                     echo '<div class="dropdown dropend">
@@ -33,7 +33,7 @@
             if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']){
                 $requestsHTML = "";
                 if(!isset($view->requests) || $view->requests == null){
-                    $requestsHTML = "<li class='listItem'>No Requests<i style='font-size: 20px' class='bi bi-inbox-fill mx-2'></i></li>";
+                    $requestsHTML = "<li class='listItem'>No Requests <i class=\"mx-2 bi bi-envelope-open\"></i></li>";
                 }
                 foreach($view->requests as $rq){
                     $un = $rq->getUsername();
@@ -45,13 +45,13 @@
                 }
                 echo '<div class="d-flex justify-content-end align-items-center">
                             <div class="dropdown dropstart">
-                              <i style="font-size: 30px" class="btn linker bi bi-people-fill" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                              <i style="font-size: 30px" class="btn linker bi bi-mailbox2 mx-2" data-bs-toggle="dropdown" aria-expanded="false"></i>
                               <ul class="dropdown-menu dropdown-menu-dark text-end" style="right: calc(50px + 0.4vw)" aria-labelledby="account">
                                 '. $requestsHTML.'
                               </ul>
                             </div>
                             <div class="dropdown dropstart">
-                              <button class="btn account" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-image: url(' . $_SESSION['profileImage'] . ');"></button>
+                              <button class="btn account hover" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-image: url(' . $_SESSION['profileImage'] . ');"></button>
                               <ul class="dropdown-menu dropdown-menu-dark text-end" style="right: calc(50px + 0.4vw)" aria-labelledby="account">
                                 <li class="dropdown-item disabled">@'.$_SESSION['username'].'</li>
                                 <li><a class="dropdown-item" href="account.php">Account Settings <i class="bi bi-gear-wide-connected"></i></a></li>

@@ -2,160 +2,96 @@
 ?>
 <div id="map" style="width: 100%; height: calc(100vh - 70px)">
 </div>
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="movingFriendsToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto"><i class="bi bi-arrows-move"></i> These friends moved</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body d-flex align-items-start" id="movingFriends">
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/Notifier.js"></script>
+<script type="text/javascript" src="/js/Map.js"></script>
 <script type="text/javascript">
-    let xhr = new XMLHttpRequest();
-    let friends = [], map = null;
-    let myLat = 0, myLng = 0;
-    let secondXhr = new XMLHttpRequest();
-    let myMarker = null;
-    let markers = null;
-    //setTimeout(updateMarkers, 10000);
+    let map = null;
+    let updateLocation = new XMLHttpRequest();
 
-    xhr.open("GET", "../controllers/getFriends.php");
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4) {
-            if (xhr.status == 200) {
-                friends = JSON.parse(xhr.responseText).friends;
-                if(markers == null){
-                    markers = {};
-                    makeFriendsMarkers();
+    function initGoogle(){//create the map
+        let loggedUser = '{ "username" : "<?php echo $_SESSION['loggedUser']->getUsername()?>", "firstName": "<?php echo $_SESSION['loggedUser']->getFirstName()?>",'+
+            '"lastName": "<?php echo $_SESSION['loggedUser']->getLastName()?>", "email": "<?php echo $_SESSION['loggedUser']->getEmail()?>", '+
+            '"lat": <?php echo $_SESSION['loggedUser']->getLat()?>, "lng": <?php echo $_SESSION['loggedUser']->getLng()?>, "statusCode": "null", "profileImage": "<?php echo $_SESSION['loggedUser']->getProfileImage()?>"}';
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", "../controllers/getFriends.php");//get all the logged in user friends
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    let googleMap = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 10,
+                        center: { lat: 0, lng: 0},
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    });
+                    map = new Map(JSON.parse(loggedUser), googleMap, JSON.parse(xhr.responseText).friends);
+                    navigator.geolocation.watchPosition(setMyLocation, function(){
+                        alert("Geolocation is disabled or not supported by this browser");
+                    });
+                    setTimeout(updateFriends, 3000);
+                } else {
+                    console.log("Error: " + xhr.status);
                 }
-            } else {
-                console.log("Error: " + xhr.status);
             }
         }
+        xhr.send(null);
     }
-    xhr.send(null);
 
     function setMyLocation(position){
         let toCenter = false;
-        let latDiff = position.coords.latitude - myLat;
-        let lngDiff = position.coords.longitude - myLng;
+        let latDiff = position.coords.latitude - map.getUserLat();//latitude difference in other words how much the logged in user moved
+        let lngDiff = position.coords.longitude - map.getUserLng();//longitude difference in other words how much the logged in user moved
+        //if the user has moved significantly then recenter the map on him
         if(latDiff >= 1 || lngDiff >= 1 || latDiff <= -1 || lngDiff <= -1){
             toCenter = true;
-        }else{
-            console.log(
-                "myLat: " + myLat + "\n" +
-                "coords.lat:" + position.coords.latitude + "\n" +
-                "myLng: " + myLng + "\n" +
-                "coords.lng: " + position.coords.longitude + "\n"
-            );
         }
-        myLat = position.coords.latitude;
-        myLng = position.coords.longitude;
 
-        if(myMarker == null){
-            map.setCenter({lat: myLat, lng: myLng});
-
-            myMarker = new google.maps.Marker({
-                position: {lat: myLat, lng: myLng},
-                map: map,
-                label: {
-                    text: "\ue7fd",
-                    fontFamily: "Material Icons",
-                    color: "white",
-                    fontSize: "15px",
-                }
-            });
-
-            const htmlContent = "" +
-                "<div class='d-flex align-items-center justify-content-center'>" +
-                "<img class='account m-2' src='<?php echo $_SESSION['profileImage']?>'>" +
-                "<h5><?php echo $_SESSION['username'] ?></h5>" +
-                "</div>";
-            const infowindow = new google.maps.InfoWindow({
-                content: htmlContent
-            });
-
-            myMarker.addListener('mouseover', () => {
-                infowindow.open(myMarker.get("map"), myMarker);
-            }, false);
-            myMarker.addListener('mouseout', () => {
-                infowindow.close();
-            }, false);
+        map.setUserPos(position.coords.latitude, position.coords.longitude);
+        let myLat = map.getUserLat();
+        let myLng = map.getUserLng()
+        //if the logged in user marker is null then it needs to be created
+        if(map.getMyMarker() == null){
+            map.center(myLat, myLng);//center the map on the logged in user location
+            map.createMyMarker();
         }else{
-            myMarker.setPosition({lat: myLat, lng: myLng});
-            if(toCenter){
-                console.log("here");
-                map.setCenter({lat: myLat, lng: myLng});
+            //if the marker exists simply change it's position
+            map.setMyMarkerPos(myLat, myLng);
+            if(toCenter){//if map needs to be centered on new position do so
+                map.center( myLat, myLng);
             }
         }
 
-        secondXhr.open("GET", "../controllers/updateLocation.php?lat=" + myLat + "&lng=" + myLng);
-        secondXhr.send(null);
-
+        //update the logged in user location on the database
+        updateLocation.open("GET", "../controllers/updateLocation.php?lat=" + myLat + "&lng=" + myLng);
+        updateLocation.send(null);
     }
 
-    function initMap(){
-        map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 10,
-            center: { lat: 0, lng: 0},
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
-
-        navigator.geolocation.watchPosition(setMyLocation);
-    }
-
-    function makeFriendsMarkers(){
-        for(let i = 0; i < friends.length; i++){
-            markers[friends[i].username] = createMarker(friends[i]);
-        }
-    }
-
-    function createMarker(user){
-        let marker = new google.maps.Marker(
-            {
-                position: { lat: user.lat, lng: user.lng},
-                map: map,
-                label: {
-                    text: "\ue87d",
-                    fontFamily: "Material Icons",
-                    color: "white",
-                    fontSize: "18px",
+    function updateFriends(){
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", "../controllers/getFriends.php");//get all the logged in user friends
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    map.updateMarkers(JSON.parse(xhr.responseText).friends);
+                } else {
+                    console.log("Error: " + xhr.status);
                 }
             }
-        );
-        //making infowindows
-        const htmlContent = "" +
-            "<div class='d-flex align-items-center justify-content-center'>" +
-            "<img class='account m-2' src='"+ user.profileImage +"'>" +
-            "<h5>" + user.username + "</h5>" +
-            "</div>";
-        const infowindow = new google.maps.InfoWindow({
-            content: htmlContent
-        });
-
-        marker.addListener('mouseover', () => {
-            infowindow.open(marker.get("map"), marker);
-        }, false);
-        marker.addListener('mouseout', () => {
-            infowindow.close();
-        }, false);
-
-        return marker;
-    }
-
-    function updateMarkers(){
-        xhr.open("GET", "../controllers/getFriends.php");
+        }
         xhr.send(null);
-
-        for(let i = 0; i < friends.length; i++){
-            let username = friends[i].username;
-            let friendLat = friends[i].lat;
-            let friendLng = friends[i].lng;
-            if(username in markers){
-                markers[username].setPosition({lat: friendLat, lng: friendLng});
-            }else{
-                markers[username] = createMarker(friends[i]);
-            }
-        }
-
-        //setTimeout(updateMarkers, 10000);
+        setTimeout(updateFriends, 3000)
     }
-
-
 </script>
 <!-- Google maps api -->
-<script async defer src="https://maps.google.com/maps/api/js?key=AIzaSyD3TxuDzAKObKZ4LUi9sdpoEF9btlJFygg&callback=initMap" type="text/javascript"></script>
+<script async defer src="https://maps.google.com/maps/api/js?key=AIzaSyD3TxuDzAKObKZ4LUi9sdpoEF9btlJFygg&callback=initGoogle" type="text/javascript"></script>
 <?php
 require('template/footer.phtml');
