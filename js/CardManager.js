@@ -7,8 +7,6 @@ class CardManager{
     }
 
     addUserCards(users){
-        //creating empty friends list to later add their location
-        let friends = [];
         let html = "";//empty string which will be filled and added to the container
         for(let i = 0; i < users.length; i++){//for loop that goes through every user given to the function
             //this is done for simplicity and legibility
@@ -18,12 +16,18 @@ class CardManager{
             //html elements with the user's information
             html += "<div class='card userCard'>" +
                 "<img src='"+ user.profileImage +"' class='card-img-top cardProfileImage' alt='profileImage'/>" +
-                "<div class='card-body'><h5>@" + user.username + "</h5>";
+                "<div class='card-body d-flex flex-column'><h5>@" + user.username + "</h5>";
 
             if(this.loggedUn != ""){
+                let loc = "N/A"
+                if (user.statusCode == 'A') {//if the user is a friend then add the location
+                    loc = "(" + user.lat.toFixed(3)+", "+user.lng.toFixed(3) + ")";
+                }
+
                 html += "<div id='"+user.username+"Info'><h6 class='card-subtitle text-muted'>Name</h6><p>" + user.firstName + " " + user.lastName + "</p>" +
-                    "<h6 class='card-subtitle text-muted'>Email</h6><p>" + user.email + "</p></div>" +
-                    "<div class='d-flex  align-items-center justify-content-center text-center' id='"+user.username+"' >";
+                    "<h6 class='card-subtitle text-muted'>Email</h6><p>" + user.email + "</p></div>" + 
+                    "<h6 class='card-subtitle text-muted'>Location</h6><p>"+loc+"</p>"+
+                    "<div class='d-flex align-items-center justify-content-center text-center m-auto' id='"+user.username+"' >";
                 //depending on the friendship status different buttons will be displayed, what the buttons can do is dealt with in the button manager class
                 switch(user.statusCode){
                     case 'R'://requested by the logged in user
@@ -34,7 +38,6 @@ class CardManager{
                         }
                         break;
                     case 'A'://accepted/friends
-                        friends.push(user);
                         html += this.btnManager.getFriendsBtn() + this.btnManager.getRemoveBtn(user);
                         break;
                     case 'D'://declined
@@ -50,16 +53,8 @@ class CardManager{
                 html += "</div>";
             }
             html += "</div></div>";
-
         }
         //add everything to the HTML container
         this.cardsContainer.innerHTML += html;
-        //for each friend also add their location
-        friends.forEach(this.addLocation);
-    }
-
-    addLocation(user){
-        //simply adds the location of the user to it's card
-        document.getElementById(user.username + "Info").innerHTML += "<h6 class='card-subtitle text-muted'>Location</h6><p>("+user.lat.toFixed(3)+","+user.lng.toFixed(3)+")</p>";
     }
 }

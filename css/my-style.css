@@ -94,7 +94,6 @@ body{
 
 .userCard{
     width: 18rem;
-    margin: 10px;
 }
 
 .linker{
@@ -130,7 +129,6 @@ body{
     padding: 0;
     height: 10rem;
     object-fit: cover;
-    background-color: white;
 }
 
 .w-200{

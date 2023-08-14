@@ -23,7 +23,7 @@ $check = new Checker();
 //View
 $view = new stdClass();
 
-$view->pageTitle = 'MyFriends';
+$view->pageTitle = 'MapBook';
 
 function generateLink($action, $requester, $addressee){
     $base = "index.php?";
